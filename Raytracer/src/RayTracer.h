@@ -17,12 +17,13 @@ class RayTracer
 public:
 
 
-	static void ClearBuffer(Colour** frameBuffer, int x, int y, Colour background);
+	static void ClearPixel(float* frameBuffer, int x, int y, int imageWidth, Colour clearColour);
 	static Ray FireRay(Vector pixelCoords, Vector direction);
-	static void CheckIntersect(Ray ray, float t, Sphere lighting, Sphere targetSphere, Colour** frameBuffer, int x, int y);
-	static void Render(std::ofstream &out, int widthStart, int widthEnd, int heighStart, int heightEnd,Colour** frameBuffer, float &t, Sphere &lighting, std::vector<Sphere> &spheres);
+	static void CheckIntersect(Ray ray, float t, Sphere lighting, Sphere targetSphere, float* frameBuffer, int bufferWidth, int x, int y);
 	static Sphere loadSphere(Vector pos, float size, Colour colour);
-	static void runRayTracer(std::ofstream &out, int width, int height, Colour ** frameBuffer, float t, Sphere &lighting, std::vector<Sphere> &spheres);
+	static void Render(std::ofstream &out, int bufferWidth, int widthStart, int widthEnd, int heighStart, int heightEnd, float* frameBuffer, float &t, Sphere &lighting, std::vector<Sphere> &spheres);
+	static void runRayTracer(std::ofstream &out, int width, int height, float* cpuFrameBuffer, float t, Sphere &lighting, std::vector<Sphere> &spheres);
+	
 
 private:
 

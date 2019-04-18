@@ -45,10 +45,7 @@ int main(void)
 	const int width = 1000;
 	const int height = 800;
 	const int colours = 3;//number of colours per pixel
-
-
-	//float cpuFrameBuffer[width][height][colours];//stack
-	float* cpuFrameBuffer = new float[width * height * colours];//heap
+	float* cpuFrameBuffer = new float[width * height * colours];
 
 
 
@@ -66,18 +63,8 @@ int main(void)
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
-
 	if (glewInit() != GLEW_OK)
 		return -1;
-	
-
-
-	std::cout << "Allocating memory" << std::endl;
-
-	Colour** frameBuffer = new Colour*[width];
-	for (int i = 0; i < width; ++i)
-		frameBuffer[i] = new Colour[height];
-	std::cout << "Memory allocated" << std::endl;
 
 
 
@@ -92,40 +79,27 @@ int main(void)
 	Sphere lighting(Vector(400, 0, 50), 1, white);
 
 
-	std::cout << "Rendering" << std::endl;
-	auto start = std::chrono::system_clock::now();
-
-	float t = 0;
-
-	RayTracer::runRayTracer(out, width, height, frameBuffer, t, lighting, spheres);
-
-
-	//Stops the timer and reports how quick it was
-	auto end = std::chrono::system_clock::now();
-	std::chrono::duration<double> elapsed_seconds = end - start;
-	std::cout << "Render time was: " << elapsed_seconds.count() << "s" << std::endl;
-
-	for (int x = 0; x < width; ++x)
-	{
-		for (int y = 0; y < height; ++y)
-		{
-			//cpuFrameBuffer[x][y][0] = (frameBuffer[x][y].GetRed() / 255);
-			//cpuFrameBuffer[x][y][1] = (frameBuffer[x][y].GetGreen() / 255);
-			//cpuFrameBuffer[x][y][2] = (frameBuffer[x][y].GetBlue() / 255);
-			cpuFrameBuffer[((y * width) + x) * 3 + 0] = frameBuffer[x][y].GetRed() / 255;
-			cpuFrameBuffer[((y * width) + x) * 3 + 1] = frameBuffer[x][y].GetGreen() / 255;
-			cpuFrameBuffer[((y * width) + x) * 3 + 2] = frameBuffer[x][y].GetBlue() / 255;
-		}
-	}
-
+	
 
 	while (!glfwWindowShouldClose(window))
 	{
-		/* Render here */
+		
+		std::cout << "Rendering" << std::endl;
+		auto start = std::chrono::system_clock::now();
+		float t = 0;
+		RayTracer::runRayTracer(out, width, height, cpuFrameBuffer, t, lighting, spheres);
+
+		//Stops the timer and reports how quick it was
+		auto end = std::chrono::system_clock::now();
+		std::chrono::duration<double> elapsed_seconds = end - start;
+		std::cout << "Render time was: " << elapsed_seconds.count() << "s" << std::endl;
+
+
+
+
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glWindowPos2i(0, 0);
-		//glDrawPixels(width, height, GL_RGB, GL_FLOAT, cpuFrameBuffer);
 		glDrawPixels(width, height, GL_RGB, GL_FLOAT, cpuFrameBuffer);
 
 		/* Swap front and back buffers */
@@ -134,6 +108,8 @@ int main(void)
 		/* Poll for and process events */
 		glfwPollEvents();
 	}
+
+
 
 	glfwTerminate();
 	delete [] cpuFrameBuffer;
