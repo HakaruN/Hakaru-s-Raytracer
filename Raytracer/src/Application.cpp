@@ -48,13 +48,6 @@ int main(void)
 	float* cpuFrameBuffer = new float[width * height * colours];
 
 
-
-
-	std::ofstream out("out.ppm");
-	out << "P3\n" << width << '\n' << height << '\n' << "255\n";
-
-
-
 	/* Create a windowed mode window and its OpenGL context */
 	window = glfwCreateWindow(width, height, "RayTracer", NULL, NULL);
 	if (!window)
@@ -79,22 +72,18 @@ int main(void)
 	Sphere lighting(Vector(400, 0, 50), 1, white);
 
 
-	
 
 	while (!glfwWindowShouldClose(window))
 	{
-		
 		std::cout << "Rendering" << std::endl;
 		auto start = std::chrono::system_clock::now();
 		float t = 0;
-		RayTracer::runRayTracer(out, width, height, cpuFrameBuffer, t, lighting, spheres);
+		RayTracer::runRayTracer( width, height, cpuFrameBuffer, t, lighting, spheres);
 
 		//Stops the timer and reports how quick it was
 		auto end = std::chrono::system_clock::now();
 		std::chrono::duration<double> elapsed_seconds = end - start;
 		std::cout << "Render time was: " << elapsed_seconds.count() << "s" << std::endl;
-
-
 
 
 		glClear(GL_COLOR_BUFFER_BIT);
