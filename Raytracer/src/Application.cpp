@@ -1,5 +1,5 @@
-///#pragma comment(linker, "/STACK:5000000")
-#pragma comment(linker, "/HEAP:10194304")
+//#pragma comment(linker, "/STACK:5000000")
+#pragma comment(linker, "/HEAP:10000000")//reserve 10MB on the heap as the frame buffer is on the heap
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -14,7 +14,6 @@
 #include "Sphere.h"
 #include "Maths.h"
 #include "RayTracer.h"
-
 
 #include "vendor\imgui\imgui.h"
 #include "vendor\imgui\imgui_impl_glfw.h"
@@ -74,8 +73,8 @@ int main(void)
 	std::vector<Sphere> spheres;
 	spheres.reserve(5);
 	spheres.emplace_back(Vector(width / 2, height / 2, 50), 40, blue);
-	spheres.emplace_back(Vector(width / 2, height / 2, 50), 80, green);
-	spheres.emplace_back(Vector(width / 2, height / 2, 50), 100, red);
+	spheres.emplace_back(Vector(width / 3, height / 3, 50), 80, green);
+	spheres.emplace_back(Vector(width / 4, height / 2, 50), 100, red);
 	//spheres.emplace_back(Vector(width / 2, height / 2, 50), 60, white);
 	//spheres.emplace_back(Vector(width / 2, height / 2, 50), 80, black);
 
@@ -99,18 +98,12 @@ int main(void)
 
 	while (!glfwWindowShouldClose(window))
 	{
-		std::cout << "Rendering" << std::endl;
-		auto start = std::chrono::system_clock::now();
 		float t = 0;
 		RayTracer::runRayTracer( width, height, cpuFrameBuffer, depthBuffer, t, lighting, spheres);
 		spheres[guiSphereIndex].SetPos(Vector( width * guiHoriz, height *guiVerti,0));
 		spheres[guiSphereIndex].setRadius(guiSize);
 		lighting.SetPos(Vector(width * lightHoriz, height * lightVerti, 50 ));
 
-		//Stops the timer and reports how quick it was
-		auto end = std::chrono::system_clock::now();
-		std::chrono::duration<double> elapsed_seconds = end - start;
-		std::cout << "Render time was: " << elapsed_seconds.count() << "s" << std::endl;
 
 
 
@@ -135,13 +128,13 @@ int main(void)
 			//ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
 			//ImGui::Checkbox("Another Window", &show_another_window);
 
-			ImGui::SliderFloat("Vertical Pos", &guiVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
-			ImGui::SliderFloat("Horisontal Pos", &guiHoriz, 0.0f, 1.0f);
+			ImGui::SliderFloat("Vertical", &guiVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::SliderFloat("Horisontal", &guiHoriz, 0.0f, 1.0f);
 			ImGui::SliderFloat("Size", &guiSize, 0.0f, 100.0f);
-			ImGui::SliderInt("Sphere selector",&guiSphereIndex, 0, spheres.size()-1);
+			ImGui::SliderInt("Sphere",&guiSphereIndex, 0, spheres.size()-1);
 
-			ImGui::SliderFloat("Lighting Vertical Pos", &lightVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
-			ImGui::SliderFloat("Lighting Horisontal Pos", &lightHoriz, 0.0f, 1.0f);
+			ImGui::SliderFloat("Lighting Vertical", &lightVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::SliderFloat("Lighting Horisontal", &lightHoriz, 0.0f, 1.0f);
 			//ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
 			/*
