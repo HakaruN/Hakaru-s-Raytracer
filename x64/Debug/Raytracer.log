@@ -1,0 +1,31 @@
+﻿  Application.cpp
+c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\minwindef.h(130): warning C4005: 'APIENTRY': macro redefinition
+  d:\dev\raytracing\raytracer\dependencies\glfw\include\glfw\glfw3.h(104): note: see previous definition of 'APIENTRY'
+d:\dev\raytracing\raytracer\raytracer\src\application.cpp(89): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\dev\raytracing\raytracer\raytracer\src\application.cpp(90): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\xmemory0(920): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\vector(949): note: see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,Vector,int,Colour&>(_Alloc &,_Objty *const ,Vector &&,int &&,Colour &)' being compiled
+          with
+          [
+              _Alloc=std::allocator<Sphere>,
+              _Ty=Sphere,
+              _Objty=Sphere
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\vector(951): note: see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,Vector,int,Colour&>(_Alloc &,_Objty *const ,Vector &&,int &&,Colour &)' being compiled
+          with
+          [
+              _Alloc=std::allocator<Sphere>,
+              _Ty=Sphere,
+              _Objty=Sphere
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\vector(965): note: see reference to function template instantiation 'void std::vector<Sphere,std::allocator<_Ty>>::_Emplace_back_with_unused_capacity<Vector,int,Colour&>(Vector &&,int &&,Colour &)' being compiled
+          with
+          [
+              _Ty=Sphere
+          ]
+  d:\dev\raytracing\raytracer\raytracer\src\application.cpp(86): note: see reference to function template instantiation 'void std::vector<Sphere,std::allocator<_Ty>>::emplace_back<Vector,int,Colour&>(Vector &&,int &&,Colour &)' being compiled
+          with
+          [
+              _Ty=Sphere
+          ]
+  Raytracer.vcxproj -> D:\Dev\Raytracing\Raytracer\x64\Debug\Raytracer.exe
