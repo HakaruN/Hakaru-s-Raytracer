@@ -48,6 +48,10 @@ Colour Sphere::GetColour()
 {
 	return mColour;
 }
+float Sphere::GetRadius()
+{
+	return mRadius;
+}
 void Sphere::SetPos(Vector pos) 
 {
 	mPosition = pos;

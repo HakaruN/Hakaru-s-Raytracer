@@ -37,8 +37,6 @@ Colour blue(0, 0, 255);
 
 int main(void)
 {
-
-
 	GLFWwindow* window;
 
 	bool show_demo_window = true;
@@ -92,6 +90,7 @@ int main(void)
 	static float guiVerti = 0.5f;
 	static float guiHoriz = 0.5f;
 	static float guiSize = 50;
+	static Colour sphereCol;
 	static int guiSphereIndex = 0;
 
 	static float lightVerti, lightHoriz = 0.25;
@@ -100,16 +99,13 @@ int main(void)
 	{
 		float t = 0;
 		RayTracer::runRayTracer( width, height, cpuFrameBuffer, depthBuffer, t, lighting, spheres);
+
+
 		spheres[guiSphereIndex].SetPos(Vector( width * guiHoriz, height *guiVerti,0));
 		spheres[guiSphereIndex].setRadius(guiSize);
 		lighting.SetPos(Vector(width * lightHoriz, height * lightVerti, 50 ));
 
-
-
-
-
 		glClear(GL_COLOR_BUFFER_BIT);
-		//ImGui_ImplGlfw_NewFrame();	
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
@@ -135,7 +131,7 @@ int main(void)
 
 			ImGui::SliderFloat("Lighting Vertical", &lightVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
 			ImGui::SliderFloat("Lighting Horisontal", &lightHoriz, 0.0f, 1.0f);
-			//ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+			ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
 			/*
 			if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
