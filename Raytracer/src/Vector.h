@@ -21,7 +21,7 @@ class Vector
 		float GetY();
 		float GetZ();
 
-		Vector Normalise()
+		inline Vector Normalise()
 		{
 			float magnitude = (float)sqrt(
 				mX * mX +
@@ -35,7 +35,7 @@ class Vector
 			));
 		}
 
-		float getMagnitude()
+		inline float getMagnitude()
 		{
 			return(sqrt(
 				mX * mX +

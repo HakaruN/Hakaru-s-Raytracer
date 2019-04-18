@@ -159,6 +159,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui.cpp" />
+    <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Colour.cpp" />
     <ClCompile Include="src\Maths.cpp" />
@@ -168,6 +174,14 @@
     <ClCompile Include="src\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imconfig.h" />
+    <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui.h" />
+    <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui_internal.h" />
+    <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="src\Colour.h" />
     <ClInclude Include="src\Maths.h" />
     <ClInclude Include="src\Ray.h" />

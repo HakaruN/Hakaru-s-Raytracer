@@ -14,7 +14,7 @@ Sphere::Sphere()
 {
 
 }
-bool Sphere::Intersects(Ray ray, float &t)
+ bool Sphere::Intersects(Ray ray, float &t)
 {
 	Vector rayOrigin = ray.GetOrigin();
 	Vector rayDirection = ray.GetDirection();
@@ -47,4 +47,8 @@ Vector Sphere::GetPos()
 Colour Sphere::GetColour()
 {
 	return mColour;
+}
+void Sphere::SetPos(Vector pos) 
+{
+	mPosition = pos;
 }

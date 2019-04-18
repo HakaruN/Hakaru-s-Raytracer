@@ -7,10 +7,11 @@ class Sphere
 	public:
 		Sphere();
 		Sphere(Vector pos, float rad, Colour colour);
-		bool Intersects(Ray ray, float &t);
+		 bool Intersects(Ray ray, float &t);
 		Vector GetNormal(Vector point);
 		Vector GetPos();
 		Colour GetColour();
+		void SetPos(Vector pos);
 
 	private:
 		Vector mPosition;//Sphere's position
