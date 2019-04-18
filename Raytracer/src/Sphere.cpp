@@ -52,3 +52,11 @@ void Sphere::SetPos(Vector pos)
 {
 	mPosition = pos;
 }
+void Sphere::SetColour(Colour colour)
+{
+	mColour = colour;
+}
+void Sphere::setRadius(float radius)
+{
+	mRadius = radius;
+}

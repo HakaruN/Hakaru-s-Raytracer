@@ -12,6 +12,8 @@ class Sphere
 		Vector GetPos();
 		Colour GetColour();
 		void SetPos(Vector pos);
+		void SetColour(Colour colour);
+		void setRadius(float radius);
 
 	private:
 		Vector mPosition;//Sphere's position

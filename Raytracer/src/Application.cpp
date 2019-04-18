@@ -52,7 +52,7 @@ int main(void)
 
 
 	const int width = 600;
-	const int height = 400;
+	const int height = 600;
 	const int colours = 5;//number of colours per pixel
 	float* cpuFrameBuffer = new float[width * height * colours];
 	float* depthBuffer = new float[width * height];
@@ -74,14 +74,14 @@ int main(void)
 	std::vector<Sphere> spheres;
 	spheres.reserve(5);
 	spheres.emplace_back(Vector(width / 2, height / 2, 50), 40, blue);
-	//spheres.emplace_back(Vector(width - (width / 2) , height - (height / 3), 40), 80, green);
-	//spheres.emplace_back(Vector(width / 3, height / 4, 40), 100, red);
-	//spheres.emplace_back(Vector(width / 5, height / 1.5, 50), 60, white);
-	//spheres.emplace_back(Vector(width / 5, height / 1.5, 60), 80, black);
+	spheres.emplace_back(Vector(width / 2, height / 2, 50), 80, green);
+	spheres.emplace_back(Vector(width / 2, height / 2, 50), 100, red);
+	//spheres.emplace_back(Vector(width / 2, height / 2, 50), 60, white);
+	//spheres.emplace_back(Vector(width / 2, height / 2, 50), 80, black);
 
 
 	Vector cameraPosition(0, 0, 0);
-	Sphere lighting(Vector(400, 0, 50), 1, white);
+	Sphere lighting(Vector(width / 2, height / 2, 50), 1, white);
 
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -90,15 +90,22 @@ int main(void)
 	const char* glsl_version = "#version 130";
 	ImGui_ImplOpenGL3_Init(glsl_version);
 	
-	static float fV = 0.5f;
-	static float fH = 0.5f;
+	static float guiVerti = 0.5f;
+	static float guiHoriz = 0.5f;
+	static float guiSize = 50;
+	static int guiSphereIndex = 0;
+
+	static float lightVerti, lightHoriz = 0.25;
+
 	while (!glfwWindowShouldClose(window))
 	{
 		std::cout << "Rendering" << std::endl;
 		auto start = std::chrono::system_clock::now();
 		float t = 0;
 		RayTracer::runRayTracer( width, height, cpuFrameBuffer, depthBuffer, t, lighting, spheres);
-		spheres[0].SetPos(Vector( width * fH, height*fV,0));
+		spheres[guiSphereIndex].SetPos(Vector( width * guiHoriz, height *guiVerti,0));
+		spheres[guiSphereIndex].setRadius(guiSize);
+		lighting.SetPos(Vector(width * lightHoriz, height * lightVerti, 50 ));
 
 		//Stops the timer and reports how quick it was
 		auto end = std::chrono::system_clock::now();
@@ -128,8 +135,13 @@ int main(void)
 			//ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
 			//ImGui::Checkbox("Another Window", &show_another_window);
 
-			ImGui::SliderFloat("Vertical Pos", &fV, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
-			ImGui::SliderFloat("Horisontal Pos", &fH, 0.0f, 1.0f);
+			ImGui::SliderFloat("Vertical Pos", &guiVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::SliderFloat("Horisontal Pos", &guiHoriz, 0.0f, 1.0f);
+			ImGui::SliderFloat("Size", &guiSize, 0.0f, 100.0f);
+			ImGui::SliderInt("Sphere selector",&guiSphereIndex, 0, spheres.size()-1);
+
+			ImGui::SliderFloat("Lighting Vertical Pos", &lightVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::SliderFloat("Lighting Horisontal Pos", &lightHoriz, 0.0f, 1.0f);
 			//ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
 			/*
