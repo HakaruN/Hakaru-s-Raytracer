@@ -7,5 +7,6 @@ class Maths
 {
 	public:
 		float static dot(Vector v, Vector b);
+		float static getDistance(Vector away, Vector home);
 	private:
 };

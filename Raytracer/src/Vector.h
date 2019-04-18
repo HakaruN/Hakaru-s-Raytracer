@@ -35,6 +35,15 @@ class Vector
 			));
 		}
 
+		float getMagnitude()
+		{
+			return(sqrt(
+				mX * mX +
+				mY * mY +
+				mZ * mZ
+			));
+		}
+
 	private:
 		float mX, mY, mZ;
 };

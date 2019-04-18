@@ -44,8 +44,9 @@ int main(void)
 
 	const int width = 1000;
 	const int height = 800;
-	const int colours = 3;//number of colours per pixel
+	const int colours = 5;//number of colours per pixel
 	float* cpuFrameBuffer = new float[width * height * colours];
+	float* depthBuffer = new float[width * height];
 
 
 	/* Create a windowed mode window and its OpenGL context */
@@ -66,8 +67,9 @@ int main(void)
 	spheres.emplace_back(Vector(width / 2, height / 2, 50), 40, blue);
 	spheres.emplace_back(Vector(width - (width / 2) , height - (height / 3), 40), 80, green);
 	spheres.emplace_back(Vector(width / 3, height / 4, 40), 100, red);
-	spheres.emplace_back(Vector(width / 5, height / 1.5, 40), 80, white);
-	spheres.emplace_back(Vector(width / 4, height / 2.1, 40), 60, black);
+
+	spheres.emplace_back(Vector(width / 5, height / 1.5, 50), 60, white);
+	spheres.emplace_back(Vector(width / 5, height / 1.5, 60), 80, black);
 
 	Sphere lighting(Vector(400, 0, 50), 1, white);
 
@@ -78,7 +80,7 @@ int main(void)
 		std::cout << "Rendering" << std::endl;
 		auto start = std::chrono::system_clock::now();
 		float t = 0;
-		RayTracer::runRayTracer( width, height, cpuFrameBuffer, t, lighting, spheres);
+		RayTracer::runRayTracer( width, height, cpuFrameBuffer, depthBuffer, t, lighting, spheres);
 
 		//Stops the timer and reports how quick it was
 		auto end = std::chrono::system_clock::now();
