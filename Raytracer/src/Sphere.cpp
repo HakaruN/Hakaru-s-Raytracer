@@ -1,19 +1,20 @@
 #pragma once
 //#include "stdafx.h"
-#include"Sphere.h"
-#include"Vector.h"
-#include"Maths.h"
+#include "Sphere.h"
+#include "Vector.h"
+#include "Maths.h"
+//#include "Renderable.h"
 
-Sphere::Sphere(Vector pos, float size, Colour colour)
+Sphere::Sphere(Vector pos, Colour colour, float rad)
 {
 	mPosition = pos;
-	mRadius = size;
+	mRadius = rad;
 	mColour = colour;
 }
-Sphere::Sphere()
+Sphere::Sphere() : Renderable()
 {
-
 }
+
  bool Sphere::Intersects(Ray ray, float &t)
 {
 	Vector rayOrigin = ray.GetOrigin();
@@ -52,7 +53,7 @@ float Sphere::GetRadius()
 {
 	return mRadius;
 }
-void Sphere::SetPos(Vector pos) 
+void Sphere::SetPos(Vector pos)
 {
 	mPosition = pos;
 }

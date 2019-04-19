@@ -155,6 +155,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Renderable.cpp" />
+    <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Triangle.cpp" />
     <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui.cpp" />
     <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui_demo.cpp" />
     <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui_draw.cpp" />
@@ -170,6 +172,8 @@
     <ClCompile Include="src\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Renderable.h" />
+    <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Triangle.h" />
     <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imconfig.h" />
     <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui.h" />
     <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui_impl_glfw.h" />

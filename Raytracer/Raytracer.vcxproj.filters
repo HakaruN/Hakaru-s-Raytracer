@@ -54,6 +54,12 @@
     <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Triangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Renderable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Colour.h">
@@ -96,6 +102,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imstb_truetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Triangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Renderable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
