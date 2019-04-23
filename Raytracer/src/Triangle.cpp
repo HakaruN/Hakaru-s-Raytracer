@@ -78,7 +78,7 @@ bool Triangle::Intersects(Ray ray, float &t)
 
 	Vector edge3 = mVertices[0] - mVertices[2];
 	Vector vp2 = p - mVertices[2];
-	c = edge1.cross(vp2);
+	c = edge3.cross(vp2);
 	if (normalVec.dot(c) < 0)
 		return false;
 

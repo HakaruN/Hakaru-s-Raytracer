@@ -29,7 +29,7 @@
 	#define OS_TYPE windows64
 #endif
 
-void render(int width, int height, float* frameBuffer, float* evenBuffer, float* oddBuffer, float* depthBuffer, Sphere light, std::vector<Renderable*>* renderables, float guiVerti, float guiHoriz, int guiObjectIndex, bool isCheckerboarding);
+void render(int width, int height, float* frameBuffer, float* evenBuffer, float* oddBuffer, float* depthBuffer, Sphere light, std::vector<Renderable*>* renderables, float guiVerti, float guiHoriz,float guiDist, int guiObjectIndex, bool isCheckerboarding);
 
 Colour white(255, 255, 255);
 Colour darkWhite(128, 128, 128);
@@ -83,14 +83,14 @@ int main(void)
 	std::vector<Renderable*>* renderables = new std::vector<Renderable*>;
 	renderables->reserve(renderablesCount);
 
-	Sphere* greenSphere = new Sphere(Vector(width / 3, height / 3, 50), green, 40);
+	//Sphere* greenSphere = new Sphere(Vector(width / 3, height / 3, 1), green, 50);
 	//Sphere* blueSphere = new Sphere(Vector(200, +200, 50), blue, 60);
 	//Sphere* redSphere = new Sphere(Vector(width / 4, height / 2, 50), red, 100);
 	//Sphere* whiteSphere = new Sphere(Vector(width / 2, height / 2, 50), white, 60);
 	//Sphere* blackSphere = new Sphere(Vector(width / 2, height / 2, 50), black, 80);
 
-	//Triangle* blueTriangle = new Triangle(Vector(00, 00, 50),blue,Vector(100, +100, 50),Vector(300, +150, 50),Vector(200, +200, 50));
-	Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-10, -10, 50),Vector(10, +10, 40),Vector(15, +30, 40));
+	Triangle* blueTriangle = new Triangle(Vector(00, 00, 50),blue,Vector(100, +100, 50),Vector(300, +150, 50),Vector(200, +200, 50));
+	//Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-0.2, -0.2, 0),Vector(0.2, -0.2, 0),Vector(0.2, 0.2, 0));
 
 	//renderables[0] = blueSphere;
 	//renderables[0] = blueTriangle;
@@ -122,12 +122,13 @@ int main(void)
 	static float guiSize = 50;
 	static int guiObjectIndex = 0;
 	static float lightVerti, lightHoriz = 0.25;
+	static float distance = 50;
 	
 	float t = 0;
 
 	while (!glfwWindowShouldClose(window))
 	{
-		render(width, height, frameBuffer, evenBuffer, oddBuffer, depthBuffer, light, renderables, guiVerti, guiHoriz, guiObjectIndex, isCheckerboarding);
+		render(width, height, frameBuffer, evenBuffer, oddBuffer, depthBuffer, light, renderables, guiVerti, guiHoriz, distance, guiObjectIndex, isCheckerboarding);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glDrawPixels(width, height, GL_RGB, GL_FLOAT, frameBuffer);
 		//spheres[guiSphereIndex].SetColour(Colour(rgbColour[0], rgbColour[1], rgbColour[2]));
@@ -151,6 +152,7 @@ int main(void)
 
 			ImGui::SliderFloat("Vertical", &guiVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
 			ImGui::SliderFloat("Horisontal", &guiHoriz, 0.0f, 1.0f);
+			//ImGui::SliderFloat("Depth", &distance, 0.0f, 25.0f);
 			//ImGui::SliderFloat("Size", &guiSize, 0.0f, 100.0f);
 
 			ImGui::SliderFloat("Lighting Vertical", &lightVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
@@ -194,9 +196,9 @@ int main(void)
 
 
 
-void render(int width, int height, float* frameBuffer, float* evenBuffer, float* oddBuffer, float* depthBuffer, Sphere light, std::vector<Renderable*>* renderables, float guiVerti, float guiHoriz, int guiObjectIndex, bool isCheckerboarding)
+void render(int width, int height, float* frameBuffer, float* evenBuffer, float* oddBuffer, float* depthBuffer, Sphere light, std::vector<Renderable*>* renderables, float guiVerti, float guiHoriz, float guiDist, int guiObjectIndex, bool isCheckerboarding)
 {
-	renderables->at(guiObjectIndex)->SetPos(Vector(width * guiHoriz, height *guiVerti, renderables->at(guiObjectIndex)->GetPos().GetZ()));
+	renderables->at(guiObjectIndex)->SetPos(Vector(width * guiHoriz, height *guiVerti, guiDist));
 	float t = 0;
 	std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
 	RayTracer::runRayTracer(width, height, frameBuffer, evenBuffer, oddBuffer, depthBuffer, std::ref(t), light, renderables, isCheckerboarding);
