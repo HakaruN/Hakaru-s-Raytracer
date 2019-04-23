@@ -153,9 +153,9 @@ int main(void)
 			ImGui::SliderFloat("Horisontal", &guiHoriz, 0.0f, 1.0f);
 			//ImGui::SliderFloat("Size", &guiSize, 0.0f, 100.0f);
 
-			//ImGui::SliderFloat("Lighting Vertical", &lightVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
-			//ImGui::SliderFloat("Lighting Horizontal", &lightHoriz, 0.0f, 1.0f);
-			//ImGui::SliderInt("Sphere select", &guiObjectIndex, 0, renderablesCount - 1);
+			ImGui::SliderFloat("Lighting Vertical", &lightVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::SliderFloat("Lighting Horizontal", &lightHoriz, 0.0f, 1.0f);
+			ImGui::SliderInt("object select", &guiObjectIndex, 0, renderables->size() - 1);
 			//ImGui::ColorEdit3("clear color", hsvColour);//Edit 3 floats representing a color
 			//ImGui::ColorConvertHSVtoRGB(hsvColour[0], hsvColour[1], hsvColour[2], rgbColour[0], rgbColour[1], rgbColour[2]);
 
