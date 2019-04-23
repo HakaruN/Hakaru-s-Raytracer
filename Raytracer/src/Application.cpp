@@ -29,7 +29,7 @@
 	#define OS_TYPE windows64
 #endif
 
-void render(int width, int height, float* frameBuffer, float* evenBuffer, float* oddBuffer, float* depthBuffer, Sphere light, Renderable** renderables, int renderablesCount, float guiVerti, float guiHoriz, int guiObjectIndex, bool isCheckerboarding);
+void render(int width, int height, float* frameBuffer, float* evenBuffer, float* oddBuffer, float* depthBuffer, Sphere light, std::vector<Renderable*>* renderables, float guiVerti, float guiHoriz, int guiObjectIndex, bool isCheckerboarding);
 
 Colour white(255, 255, 255);
 Colour darkWhite(128, 128, 128);
@@ -55,8 +55,8 @@ int main(void)
 	if (!glfwInit())
 		return -1;
 
-	const int width = 1500;
-	const int height = 900;
+	const int width = 900;
+	const int height = 700;
 	const int colours = 3;//number of colours per pixel
 
 	float* evenBuffer = new float[width * height * colours];
@@ -79,22 +79,28 @@ int main(void)
 
 
 		
-	const int renderablesCount = 2;
-	Renderable* renderables[renderablesCount];
-	//renderables.reserve(25);
+	const int renderablesCount = 5;
+	std::vector<Renderable*>* renderables = new std::vector<Renderable*>;
+	renderables->reserve(renderablesCount);
 
-	// ;
-	Sphere* blueSphere = new Sphere(Vector(width / 2, height / 2, 50), blue, 160);
-	Sphere* greenSphere = new Sphere(Vector(width / 3, height / 3, 50), green, 80);
+	Sphere* greenSphere = new Sphere(Vector(width / 3, height / 3, 50), green, 40);
+	//Sphere* blueSphere = new Sphere(Vector(200, +200, 50), blue, 60);
 	//Sphere* redSphere = new Sphere(Vector(width / 4, height / 2, 50), red, 100);
 	//Sphere* whiteSphere = new Sphere(Vector(width / 2, height / 2, 50), white, 60);
 	//Sphere* blackSphere = new Sphere(Vector(width / 2, height / 2, 50), black, 80);
 
-	renderables[0] = blueSphere;
-	renderables[1] = greenSphere;
+	//Triangle* blueTriangle = new Triangle(Vector(00, 00, 50),blue,Vector(100, +100, 50),Vector(300, +150, 50),Vector(200, +200, 50));
+	Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-10, -10, 50),Vector(10, +10, 40),Vector(15, +30, 40));
+
+	//renderables[0] = blueSphere;
+	//renderables[0] = blueTriangle;
+	//renderables[1] = greenSphere;
 	//renderables[2] = redSphere;
 	//renderables[3] = whiteSphere;
 	//renderables[4] = blackSphere;
+
+	renderables->push_back(blueTriangle);
+	//renderables->push_back(greenSphere);
 
 
 	Vector cameraPosition(0, 0, 0);
@@ -121,7 +127,7 @@ int main(void)
 
 	while (!glfwWindowShouldClose(window))
 	{
-		render(width, height, frameBuffer, evenBuffer, oddBuffer, depthBuffer, light, renderables, renderablesCount, guiVerti, guiHoriz, guiObjectIndex, isCheckerboarding);
+		render(width, height, frameBuffer, evenBuffer, oddBuffer, depthBuffer, light, renderables, guiVerti, guiHoriz, guiObjectIndex, isCheckerboarding);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glDrawPixels(width, height, GL_RGB, GL_FLOAT, frameBuffer);
 		//spheres[guiSphereIndex].SetColour(Colour(rgbColour[0], rgbColour[1], rgbColour[2]));
@@ -145,17 +151,17 @@ int main(void)
 
 			ImGui::SliderFloat("Vertical", &guiVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
 			ImGui::SliderFloat("Horisontal", &guiHoriz, 0.0f, 1.0f);
-			ImGui::SliderFloat("Size", &guiSize, 0.0f, 100.0f);
+			//ImGui::SliderFloat("Size", &guiSize, 0.0f, 100.0f);
 
-			ImGui::SliderFloat("Lighting Vertical", &lightVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
-			ImGui::SliderFloat("Lighting Horizontal", &lightHoriz, 0.0f, 1.0f);
-			ImGui::SliderInt("Sphere select", &guiObjectIndex, 0, renderablesCount - 1);
+			//ImGui::SliderFloat("Lighting Vertical", &lightVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
+			//ImGui::SliderFloat("Lighting Horizontal", &lightHoriz, 0.0f, 1.0f);
+			//ImGui::SliderInt("Sphere select", &guiObjectIndex, 0, renderablesCount - 1);
 			//ImGui::ColorEdit3("clear color", hsvColour);//Edit 3 floats representing a color
 			//ImGui::ColorConvertHSVtoRGB(hsvColour[0], hsvColour[1], hsvColour[2], rgbColour[0], rgbColour[1], rgbColour[2]);
 
 			
-			if (ImGui::Button("Button"))// Buttons return true when clicked (most widgets return true when edited/activated)
-			render(width, height, frameBuffer, evenBuffer, oddBuffer, depthBuffer, light, renderables, renderablesCount, guiVerti, guiHoriz, guiObjectIndex, isCheckerboarding);
+			//if (ImGui::Button("Button"))// Buttons return true when clicked (most widgets return true when edited/activated)
+			//render(width, height, frameBuffer, evenBuffer, oddBuffer, depthBuffer, light, renderables, renderablesCount, guiVerti, guiHoriz, guiObjectIndex, isCheckerboarding);
 			//ImGui::SameLine();
 			//ImGui::Text("counter = %d", counter);
 			
@@ -188,12 +194,12 @@ int main(void)
 
 
 
-void render(int width, int height, float* frameBuffer, float* evenBuffer, float* oddBuffer, float* depthBuffer, Sphere light, Renderable** renderables,int renderablesCount, float guiVerti, float guiHoriz, int guiObjectIndex, bool isCheckerboarding)
+void render(int width, int height, float* frameBuffer, float* evenBuffer, float* oddBuffer, float* depthBuffer, Sphere light, std::vector<Renderable*>* renderables, float guiVerti, float guiHoriz, int guiObjectIndex, bool isCheckerboarding)
 {
-	renderables[guiObjectIndex]->SetPos(Vector(width * guiHoriz, height *guiVerti,0));
+	renderables->at(guiObjectIndex)->SetPos(Vector(width * guiHoriz, height *guiVerti, renderables->at(guiObjectIndex)->GetPos().GetZ()));
 	float t = 0;
 	std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
-	RayTracer::runRayTracer(width, height, frameBuffer, evenBuffer, oddBuffer, depthBuffer, std::ref(t), light, renderables, renderablesCount, isCheckerboarding);
+	RayTracer::runRayTracer(width, height, frameBuffer, evenBuffer, oddBuffer, depthBuffer, std::ref(t), light, renderables, isCheckerboarding);
 
 	std::chrono::steady_clock::time_point end(std::chrono::steady_clock::now());
 	frameRate = 1 / std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();

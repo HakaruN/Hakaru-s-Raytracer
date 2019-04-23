@@ -8,3 +8,16 @@ float Maths::getDistance(Vector away, Vector home)
 {
 	return sqrt(pow(home.GetX() - away.GetX(), 2) + pow( home.GetY() - away.GetY(), 2) + pow(home.GetZ() - away.GetZ(),2));
 }
+
+float Maths::GetMagnitude(float a)
+{
+	return sqrt(pow(a, 2));
+}
+float Maths::GetMagnitude(Vector a)
+{
+	return sqrt((pow(a.GetX(),2)) + (pow(a.GetY(), 2)) + (pow(a.GetZ(), 2)));
+}
+Vector Maths::Normalise(Vector a)
+{
+	return Vector(sqrt(pow(a.GetX(), 2)), sqrt(pow(a.GetY(), 2)), sqrt(pow(a.GetZ(), 2)));
+}

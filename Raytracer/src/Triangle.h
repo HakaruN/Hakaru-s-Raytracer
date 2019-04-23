@@ -1,22 +1,28 @@
 #pragma once
-/*include "Vector.h"
+#include "Vector.h"
 #include "Ray.h"
 #include "Colour.h"
 #include "Renderable.h"
 class Triangle : public Renderable
 {	
 	public:
-		Triangle(Vector position, Colour colour,Vector vert1, Vector vert2, Vector vert3) : Renderable(position, colour);
-		Colour GetColour();
-		Vector GetPos();
-		void SetPos(Vector pos);
-		void SetColour(Colour colour);
+		Triangle(Vector position, Colour colour,Vector vert1, Vector vert2, Vector vert3);
+		virtual Vector GetPos() override;
+		virtual Colour GetColour() override;
+		virtual float GetViewableArea(Vector toCamera) override;
+
+		virtual void SetPos(Vector pos) override;
+		virtual void SetColour(Colour colour) override;
+
+		virtual inline bool Intersects(Ray ray, float &t) override;
+		virtual Vector GetNormal(Vector point) override;
+
 
 	private:
 		Colour mColour;
+		Vector mOrigVertices[3];
+		Vector mOrigPosition;
 		Vector mVertices[3];
 		Vector mPosition;
 
 };
-
-*/

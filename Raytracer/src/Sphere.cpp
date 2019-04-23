@@ -11,36 +11,41 @@ Sphere::Sphere(Vector pos, Colour colour, float rad)
 	mRadius = rad;
 	mColour = colour;
 }
-Sphere::Sphere() : Renderable()
+Sphere::Sphere()
 {
 }
 
- bool Sphere::Intersects(Ray ray, float &t)
+
+bool Sphere::Intersects(Ray ray, float &t)
 {
-	Vector rayOrigin = ray.GetOrigin();
-	Vector rayDirection = ray.GetDirection();
+	 // Point intersection p = pos + dir * t where t = distance along the ray
+	Vector rayOrigin = ray.GetOrigin();//pos
+	Vector rayDirection = ray.GetDirection();//dir
 	Vector oc = rayOrigin - mPosition;
 	float b = 2 * Maths::dot(oc, rayDirection);
 	float c = Maths::dot(oc, oc ) - pow(mRadius, 2);
-	float disc = b * b - 4 * c;
-	if (disc < 0) return false;
+	float discriminant = pow(b,2) - 4 * c;
+	if (discriminant < 0) return false; //if the discriminant > 0, the quadratic equation has 2 roots
 	else
 	{
-		disc = sqrt(disc);
-		float t0 = -b - disc;
-		float t1 = -b + disc;
+		discriminant = sqrt(discriminant);
+		float t0 = -b - discriminant;
+		float t1 = -b + discriminant;
 
-		t = (t0 < t1) ? t0 : t1;
+		t = (t0 < t1) ? t0 : t1;//if t0 = t1 then the ray hit tangent to the sphere
 		return true;
 	}
-
 }
 
+
+float Sphere::GetRadius()
+{
+	return mRadius;
+}
 Vector Sphere::GetNormal(Vector point)
 {
 	return (point - mPosition) / mRadius;
 }
-
 Vector Sphere::GetPos()
 {
 	return mPosition;
@@ -49,10 +54,11 @@ Colour Sphere::GetColour()
 {
 	return mColour;
 }
-float Sphere::GetRadius()
+float Sphere::GetViewableArea(Vector toCamera)
 {
-	return mRadius;
+	return 3.14 * mRadius * mRadius;
 }
+
 void Sphere::SetPos(Vector pos)
 {
 	mPosition = pos;

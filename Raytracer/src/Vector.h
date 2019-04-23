@@ -11,16 +11,26 @@ class Vector
 		Vector(float x, float y, float z);
 
 		//operators
-		Vector operator + (Vector v) { return Vector(mX + v.GetX(), mY + v.GetY(), mZ + v.GetZ()); }//performs a subtraction of the vectors respective components and returns a new vector
-		Vector operator - (Vector v) { return Vector(mX - v.GetX(), mY - v.GetY(), mZ - v.GetZ()); }//performs a subtraction of the vectors respective components and returns a new vector
-		Vector operator * (float d ) { return Vector(mX * d, mY * d, mZ * d); }//performs a subtraction of the vectors respective components and returns a new vector
-		Vector operator / (float d) { return Vector(mX / d, mY / d, mZ / d); }//performs a subtraction of the vectors respective components and returns a new vector
+		inline Vector operator + (Vector v) { return Vector(mX + v.GetX(), mY + v.GetY(), mZ + v.GetZ()); }//performs a subtraction of the vectors respective components and returns a new vector
+		inline Vector operator - (Vector v) { return Vector(mX - v.GetX(), mY - v.GetY(), mZ - v.GetZ()); }//performs a subtraction of the vectors respective components and returns a new vector
+		inline Vector operator * (float d ) { return Vector(mX * d, mY * d, mZ * d); }//performs a subtraction of the vectors respective components and returns a new vector
+		inline Vector operator / (float d) { return Vector(mX / d, mY / d, mZ / d); }//performs a subtraction of the vectors respective components and returns a new vector
 
-		//getterst and setters
+		//getterst and setters	
 		float GetX();
 		float GetY();
 		float GetZ();
 
+		inline Vector cross(Vector v) {
+			float i = (mY * v.GetZ()) + (v.GetY() * mZ);
+			float j = -((mX * v.GetZ()) + (v.GetX() * mZ));
+			float k = (mX * v.GetY()) + (v.GetX() * mY);
+			return Vector(i, j, k);
+		}
+		inline float dot(Vector a)
+		{
+			return ((mX * a.GetX()) + (mY * a.GetY()) + (mZ * a.GetZ()));
+		}
 		inline Vector Normalise()
 		{
 			float magnitude = (float)sqrt(
@@ -34,7 +44,6 @@ class Vector
 				mZ / magnitude
 			));
 		}
-
 		inline float getMagnitude()
 		{
 			return(sqrt(
