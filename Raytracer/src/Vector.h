@@ -52,6 +52,20 @@ class Vector
 				mZ * mZ
 			));
 		}
+		inline static float distanceBetweenVectors(Vector a, Vector b)
+		{
+			return(
+				sqrt(pow(a.GetX() - b.GetX(),2))
+				-
+				sqrt(pow(a.GetY() - b.GetY(), 2))
+				-
+				sqrt(pow(a.GetZ() - b.GetZ(), 2))
+				);
+		}
+		inline static Vector vectorBetweenVectors(Vector a, Vector b)
+		{
+			return a - b;
+		}
 
 	private:
 		float mX, mY, mZ;

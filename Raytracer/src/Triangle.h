@@ -3,6 +3,7 @@
 #include "Ray.h"
 #include "Colour.h"
 #include "Renderable.h"
+#include "Sphere.h"
 class Triangle : public Renderable
 {	
 	public:
@@ -17,6 +18,8 @@ class Triangle : public Renderable
 		virtual inline bool Intersects(Ray ray, float &t) override;
 		virtual Vector GetNormal(Vector point) override;
 
+		float inline calcMaxDist();
+
 
 	private:
 		Colour mColour;
@@ -24,5 +27,6 @@ class Triangle : public Renderable
 		Vector mOrigPosition;
 		Vector mVertices[3];
 		Vector mPosition;
-
+		Sphere mHitSphere;
+		float maxDist;
 };

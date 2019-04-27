@@ -155,7 +155,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Renderable.cpp" />
     <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Triangle.cpp" />
     <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui.cpp" />
     <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui_demo.cpp" />

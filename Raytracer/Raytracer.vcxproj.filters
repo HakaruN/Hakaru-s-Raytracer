@@ -57,9 +57,6 @@
     <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Triangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Renderable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Colour.h">

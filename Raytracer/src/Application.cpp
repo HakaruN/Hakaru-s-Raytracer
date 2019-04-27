@@ -39,6 +39,7 @@ Colour green(0, 255, 0);
 Colour blue(0, 0, 255);
 
 static float frameRate;
+static bool sphericalHitDetection = false;
 
 
 
@@ -55,14 +56,17 @@ int main(void)
 	if (!glfwInit())
 		return -1;
 
-	const int width = 900;
-	const int height = 700;
+	const int width = 800;
+	const int height = 600;
 	const int colours = 3;//number of colours per pixel
 
 	float* evenBuffer = new float[width * height * colours];
 	float* oddBuffer = new float[width * height * colours];
 	float* frameBuffer = new float[width * height * colours];
 	float* depthBuffer = new float[width * height];
+
+
+	Vector cameraPos(0,0,0);
 	
 
 
@@ -83,28 +87,25 @@ int main(void)
 	std::vector<Renderable*>* renderables = new std::vector<Renderable*>;
 	renderables->reserve(renderablesCount);
 
-	//Sphere* greenSphere = new Sphere(Vector(width / 3, height / 3, 1), green, 50);
-	//Sphere* blueSphere = new Sphere(Vector(200, +200, 50), blue, 60);
-	//Sphere* redSphere = new Sphere(Vector(width / 4, height / 2, 50), red, 100);
+	//Sphere* greenSphere = new Sphere(Vector(0, 0, 40), green, 10);
+	//Sphere* blueSphere = new Sphere(Vector(200, +200, 50), blue, 40);
+	//Sphere* redSphere = new Sphere(Vector(width / 4, height / 2, -50), red, 50);
 	//Sphere* whiteSphere = new Sphere(Vector(width / 2, height / 2, 50), white, 60);
 	//Sphere* blackSphere = new Sphere(Vector(width / 2, height / 2, 50), black, 80);
 
-	Triangle* blueTriangle = new Triangle(Vector(00, 00, 50),blue,Vector(100, +100, 50),Vector(300, +150, 50),Vector(200, +200, 50));
-	//Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-0.2, -0.2, 0),Vector(0.2, -0.2, 0),Vector(0.2, 0.2, 0));
+	Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(100, +100, 50),Vector(300, +150, 50),Vector(200, +200, 50));
 
-	//renderables[0] = blueSphere;
-	//renderables[0] = blueTriangle;
-	//renderables[1] = greenSphere;
-	//renderables[2] = redSphere;
-	//renderables[3] = whiteSphere;
-	//renderables[4] = blackSphere;
+	//wrong
+	//Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-100, 0, 10),Vector(100, 0, 10),Vector(100, 0, 10));
 
 	renderables->push_back(blueTriangle);
 	//renderables->push_back(greenSphere);
+	//renderables->push_back(blueSphere);
+	//renderables->push_back(redSphere);
 
 
 	Vector cameraPosition(0, 0, 0);
-	Sphere light(Vector(width / 2, height / 2, 50), white, 40);
+	Sphere light(Vector(width, height , 50), white, 40);
 
 
 	ImGui::CreateContext();
@@ -122,7 +123,7 @@ int main(void)
 	static float guiSize = 50;
 	static int guiObjectIndex = 0;
 	static float lightVerti, lightHoriz = 0.25;
-	static float distance = 50;
+	static float distance = 40;
 	
 	float t = 0;
 
@@ -150,9 +151,9 @@ int main(void)
 			ImGui::Checkbox("Checkerboarding", &isCheckerboarding);      // Edit bools storing our window open/close state
 			//ImGui::Checkbox("Another Window", &show_another_window);
 
-			ImGui::SliderFloat("Vertical", &guiVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
-			ImGui::SliderFloat("Horisontal", &guiHoriz, 0.0f, 1.0f);
-			//ImGui::SliderFloat("Depth", &distance, 0.0f, 25.0f);
+			ImGui::SliderFloat("Vertical", &guiVerti, -1.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::SliderFloat("Horisontal", &guiHoriz, -1.0f, 1.0f);
+			ImGui::SliderFloat("Depth", &distance, 0.0f, 400.0f);
 			//ImGui::SliderFloat("Size", &guiSize, 0.0f, 100.0f);
 
 			ImGui::SliderFloat("Lighting Vertical", &lightVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
