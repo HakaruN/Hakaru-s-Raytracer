@@ -38,7 +38,7 @@ Colour red(255, 0, 0);
 Colour green(0, 255, 0);
 Colour blue(0, 0, 255);
 
-static float frameRate;
+static double frameRate;
 static bool sphericalHitDetection = false;
 
 
@@ -56,14 +56,15 @@ int main(void)
 	if (!glfwInit())
 		return -1;
 
-	const int width = 800;
-	const int height = 600;
-	const int colours = 3;//number of colours per pixel
+	const int width = 920;
+	const int height = 310;
+	const int colours = 4;//number of colours per pixel
 
 	float* evenBuffer = new float[width * height * colours];
 	float* oddBuffer = new float[width * height * colours];
 	float* frameBuffer = new float[width * height * colours];
 	float* depthBuffer = new float[width * height];
+	//float* stexil = new float[width * height];
 
 
 	Vector cameraPos(0,0,0);
@@ -87,9 +88,9 @@ int main(void)
 	std::vector<Renderable*>* renderables = new std::vector<Renderable*>;
 	renderables->reserve(renderablesCount);
 
-	//Sphere* greenSphere = new Sphere(Vector(0, 0, 40), green, 10);
-	//Sphere* blueSphere = new Sphere(Vector(200, +200, 50), blue, 40);
-	//Sphere* redSphere = new Sphere(Vector(width / 4, height / 2, -50), red, 50);
+	Sphere* greenSphere = new Sphere(Vector(0, 0, 40), green, 40);
+	Sphere* blueSphere = new Sphere(Vector(200, +200, 50), blue, 40);
+	Sphere* redSphere = new Sphere(Vector(width / 4, height / 2, -50), red, 50);
 	//Sphere* whiteSphere = new Sphere(Vector(width / 2, height / 2, 50), white, 60);
 	//Sphere* blackSphere = new Sphere(Vector(width / 2, height / 2, 50), black, 80);
 
@@ -97,9 +98,9 @@ int main(void)
 
 	//wrong
 	//Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-100, 0, 10),Vector(100, 0, 10),Vector(100, 0, 10));
-
-	renderables->push_back(blueTriangle);
-	//renderables->push_back(greenSphere);
+	
+	//renderables->push_back(blueTriangle);
+	renderables->push_back(greenSphere);
 	//renderables->push_back(blueSphere);
 	//renderables->push_back(redSphere);
 
@@ -124,14 +125,34 @@ int main(void)
 	static int guiObjectIndex = 0;
 	static float lightVerti, lightHoriz = 0.25;
 	static float distance = 40;
+	static float fov = 80;
 	
 	float t = 0;
 
+	//texture setup for the cpu-gpu framebuffer passover
+	GLuint renderTexture = 0;//handle to the texture object
+	glGenTextures(1, &renderTexture);//generates a texture
+	glBindTexture(GL_TEXTURE_2D, renderTexture);//binds the texture to the handle
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_FLOAT, frameBuffer);
+
+	
+	//preps the render for the incoming texture 
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, renderTexture);
+
 	while (!glfwWindowShouldClose(window))
 	{
+
+
+
 		render(width, height, frameBuffer, evenBuffer, oddBuffer, depthBuffer, light, renderables, guiVerti, guiHoriz, distance, guiObjectIndex, isCheckerboarding);
 		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawPixels(width, height, GL_RGB, GL_FLOAT, frameBuffer);
+		glDrawPixels(width, height, GL_RGBA, GL_FLOAT, frameBuffer);
 		//spheres[guiSphereIndex].SetColour(Colour(rgbColour[0], rgbColour[1], rgbColour[2]));
 		light.SetPos(Vector(width * lightHoriz, height * lightVerti, 50 ));		
 		ImGui_ImplOpenGL3_NewFrame();
@@ -150,6 +171,7 @@ int main(void)
 			//ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
 			ImGui::Checkbox("Checkerboarding", &isCheckerboarding);      // Edit bools storing our window open/close state
 			//ImGui::Checkbox("Another Window", &show_another_window);
+			ImGui::SliderFloat("FOV", &fov, 0.0f, 90.0f);
 
 			ImGui::SliderFloat("Vertical", &guiVerti, -1.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
 			ImGui::SliderFloat("Horisontal", &guiHoriz, -1.0f, 1.0f);
@@ -185,6 +207,7 @@ int main(void)
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
+	glDeleteTextures(1, &renderTexture);
 
 	glfwTerminate();
 
@@ -206,5 +229,4 @@ void render(int width, int height, float* frameBuffer, float* evenBuffer, float*
 
 	std::chrono::steady_clock::time_point end(std::chrono::steady_clock::now());
 	frameRate = 1 / std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
-	//std::cout << 1 / std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << std::endl;
 }

@@ -76,8 +76,8 @@ Vector Triangle::GetNormal(Vector point)
 bool Triangle::Intersects(Ray ray, float &t)
 {
 
-	//if (mHitSphere.Intersects(ray, t))
 	if (1)
+	//if (mHitSphere.Intersects(ray, t))
 	{
 		Vector normalVec = Triangle::GetNormal(Vector(0, 0, 0));
 		Vector rayOrigin = ray.GetOrigin();

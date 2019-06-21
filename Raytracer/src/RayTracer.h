@@ -23,7 +23,6 @@ public:
 	inline static void Render(int bufferWidth, int widthStart, int widthEnd, int heightStart, int heightEnd, float* frameBuffer, float* evenBuffer, float* oddBuffer, float* depthBuffer, float &t, Sphere &lighting, std::vector<Renderable*>* renderables);
 	inline static Ray FireRay(Vector pixelCoords, Vector direction);
 	inline static void CheckIntersect(Ray ray, float t, Sphere lighting, Renderable* renderableObject, float* frameBuffer, float* depthBuffer, int bufferWidth, int x, int y);
-	static Sphere loadSphere(Vector pos, float size, Colour colour);
 	
 
 private:

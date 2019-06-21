@@ -11,5 +11,7 @@ class Maths
 		Vector static Normalise(Vector a);
 		float static GetMagnitude(Vector a);
 		float static GetMagnitude(float a);
+		float static degToRad(float degrees);
+		float static radToDeg(float radians);
 	private:
 };
