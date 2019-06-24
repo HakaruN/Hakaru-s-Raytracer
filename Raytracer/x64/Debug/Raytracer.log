@@ -2,9 +2,9 @@
 c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\minwindef.h(130): warning C4005: 'APIENTRY': macro redefinition
   c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\dependencies\glfw\include\glfw\glfw3.h(104): note: see previous definition of 'APIENTRY'
 c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\application.cpp(44): warning C4305: 'initializing': truncation from 'double' to 'float'
-c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\application.cpp(154): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\application.cpp(161): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\application.cpp(165): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\application.cpp(193): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\application.cpp(281): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\application.cpp(165): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\application.cpp(172): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\application.cpp(176): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\application.cpp(207): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\application.cpp(287): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   Raytracer.vcxproj -> C:\Users\Hakaru\Documents\Programming\GitClones\Hakaru'sRaytracer\x64\Debug\Raytracer.exe

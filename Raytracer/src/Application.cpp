@@ -42,9 +42,6 @@ Colour background(15, 15, 15);
 
 static float hsvColour[3];
 static float rgbColour[3] = { 0.7, 0.5, 0.7 };
-
-
-
 static double frameRate;
 
 
@@ -52,6 +49,7 @@ static double frameRate;
 int main(void)
 {
 	GLFWwindow* window;
+	GLFWwindow* GUIWindow;
 
 	bool isCheckerboarding = true;
 	bool perspective = true;
@@ -65,30 +63,41 @@ int main(void)
 	if (!glfwInit())
 		return -1;
 	 
-	const int width = 600;
-	const int height = 400;
-	//Vector& ScreenPos = screenPosition;
+	const int width = 800;
+	const int height = 600;
+	const int GUIWidth = 500;
+	const int GUIHeight = 500;
 	const int colours = 4;//number of colours per pixel
 
 	float* evenBuffer = new float[width * height * colours];
 	float* oddBuffer = new float[width * height * colours];
 	float* frameBuffer = new float[width * height * colours];
 	float* depthBuffer = new float[width * height];
-	//float* stexil = new float[width * height];
 
-	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(width, height, "RayTracer", NULL, NULL);
+#pragma region OpenGL window setup
+	window = glfwCreateWindow(width, height, "Render", NULL, NULL);//Creating the openGL rendering window
 	if (!window)
 	{
 		glfwTerminate();
 		return -1;
 	}
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(window);//makes the rendering window the current window
 	if (glewInit() != GLEW_OK)
 		return -1;
+	GUIWindow = glfwCreateWindow(GUIWidth, GUIHeight, "GUI", NULL, NULL);//creates the window using openGL for the GUI
+	if (!GUIWindow)
+	{
+		glfwTerminate();
+		return -1;
+	}
+	glfwMakeContextCurrent(GUIWindow);//makes the GUI window the current window
+	if (glewInit() != GLEW_OK)
+		return -1;
+	glfwMakeContextCurrent(NULL);//makes no window the current window
+#pragma endregion		
 
+#pragma region adding and renderable objects to the scene
 
-		
 	const int renderablesCount = 5;
 	std::vector<Renderable*>* renderables = new std::vector<Renderable*>;
 	renderables->reserve(renderablesCount);
@@ -107,6 +116,8 @@ int main(void)
 	renderables->push_back(greenSphere);
 	//renderables->push_back(blueSphere);
 	renderables->push_back(redSphere);
+#pragma endregion
+
 
 
 	Vector camLook(0, 0, 100);
@@ -119,7 +130,8 @@ int main(void)
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	ImGui::StyleColorsDark();
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	//ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplGlfw_InitForOpenGL(GUIWindow, true);
 	const char* glsl_version = "#version 130";
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
@@ -133,6 +145,7 @@ int main(void)
 	float t = 0; 
 	Camera camera(cameraPosition, renderables->at(guiObjectIndex)->GetPos() , Vector(0,1,0), Maths::degToRad(55), (float)width/(float)height );
 
+#pragma region TODO: add rendering to texture for the rendermethod instead of glDrawPixels
 	//texture setup for the cpu-gpu framebuffer passover
 	GLuint renderTexture = 0;//handle to the texture object
 	glGenTextures(1, &renderTexture);//generates a texture
@@ -144,18 +157,21 @@ int main(void)
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_FLOAT, frameBuffer);
 
-	
+
 	//preps the render for the incoming texture 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, renderTexture);
+#pragma endregion
+
+	
 
 	while (!glfwWindowShouldClose(window))
 	{
 		float tempFov = fov;
-		//std::cout << "Camera at: " << cameraPosition.GetX() << "," << cameraPosition.GetY() << "," << cameraPosition.GetZ() << " Object pos: " << (renderables->at(guiObjectIndex)->GetPos().GetX()) << "," << (renderables->at(guiObjectIndex)->GetPos().GetY()) << "," << (renderables->at(guiObjectIndex)->GetPos().GetZ()) << ",";
-		//std::cout << "Camera direction: " << camera.mForwards.GetX() << "," << camera.mForwards.GetY() << "," << camera.mForwards.GetZ();
-		//std::cout << " FOV:" << fov << std::endl;	
+		light.SetPos(Vector(width * lightHoriz, height * lightVerti, 50));
 		renderables->at(guiObjectIndex)->setSize(guiSize);
+		fov = tempFov;
+
 		if (freeCam)
 		{
 			camera.update(cameraPosition, camLook, Vector(0, 1, 0), Maths::degToRad(fov), (float)width / (float)height);
@@ -164,17 +180,20 @@ int main(void)
 		{
 			camera.update(cameraPosition, renderables->at(guiObjectIndex)->GetPos(), Vector(0,1,0), Maths::degToRad(fov), (float)width/(float)height);
 		}
-		render(width, height, fov, frameBuffer, evenBuffer, oddBuffer, depthBuffer, background, light, renderables, camera, guiVerti, guiHoriz, distance, guiObjectIndex, isCheckerboarding, perspective, multithreaded);
+
+		glfwMakeContextCurrent(window);
 		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawPixels(width, height, GL_RGBA, GL_FLOAT, frameBuffer);
-		//spheres[guiSphereIndex].SetColour(Colour(rgbColour[0], rgbColour[1], rgbColour[2]));
-		light.SetPos(Vector(width * lightHoriz, height * lightVerti, 50 ));		
+		render(width, height, fov, frameBuffer, evenBuffer, oddBuffer, depthBuffer, background, light, renderables, camera, guiVerti, guiHoriz, distance, guiObjectIndex, isCheckerboarding, perspective, multithreaded);
+		glDrawPixels(width, height, GL_RGBA, GL_FLOAT, frameBuffer);	
+		glfwSwapBuffers(window);
+
+		glfwMakeContextCurrent(GUIWindow);
+		glClear(GL_COLOR_BUFFER_BIT);
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
 		glWindowPos2i(0, 0);
-
 
 		// 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
 		{
@@ -205,14 +224,11 @@ int main(void)
 			//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
 		}
-
 		{//window for fps
 			ImGui::Begin("FPS");
 			ImGui::Text("FPS %.2f FPS", frameRate);
 			ImGui::End();
 		}
-
-		
 		{//window for render controls
 			ImGui::Begin("Render Controls");
 			ImGui::Checkbox("Checkerboarding", &isCheckerboarding);      // Edit bools storing our window open/close state
@@ -220,7 +236,6 @@ int main(void)
 			ImGui::Checkbox("Multithreading", &multithreaded);
 			ImGui::End();
 		}
-		
 		{//window for render controls
 			ImGui::Begin("Camera Controls");
 			ImGui::SliderFloat("FOV", &tempFov, 5.0f, 90.0f);
@@ -236,7 +251,6 @@ int main(void)
 			camLook.SetZ(z);
 			ImGui::End();
 		}
-		
 		{//window for render controls
 			ImGui::Begin("Light controls");
 			ImGui::SliderFloat("Light V", &lightVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
@@ -246,15 +260,12 @@ int main(void)
 		
 
 
-		fov = tempFov;
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(GUIWindow);
 
-		glfwPollEvents();
-
-		
+		glfwPollEvents();		
 	}
 
 	ImGui_ImplOpenGL3_Shutdown();
