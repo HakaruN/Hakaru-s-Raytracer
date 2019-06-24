@@ -190,6 +190,9 @@
     <ClInclude Include="src\Sphere.h" />
     <ClInclude Include="src\Vector.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Hakaru%27sRaytracer\Raytracer\imgui.ini" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

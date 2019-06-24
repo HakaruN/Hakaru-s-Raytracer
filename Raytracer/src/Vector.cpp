@@ -7,3 +7,6 @@
 	float Vector::GetX(){return mX;}
 	float Vector::GetY() { return mY; }
 	float Vector::GetZ() { return mZ; }
+	void Vector::SetX(float x) {  mX = x; }
+	void Vector::SetY(float y) {  mY = y; }
+	void Vector::SetZ(float z) {  mZ = z; }

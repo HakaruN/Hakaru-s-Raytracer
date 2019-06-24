@@ -114,4 +114,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Hakaru%27sRaytracer\Raytracer\imgui.ini" />
+  </ItemGroup>
 </Project>

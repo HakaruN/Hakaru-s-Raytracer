@@ -20,6 +20,9 @@ class Vector
 		float GetX();
 		float GetY();
 		float GetZ();
+		void SetX(float x);
+		void SetY(float y);
+		void SetZ(float z);
 
 		inline Vector cross(Vector v) {
 			//float i = (mY * v.GetZ()) + (v.GetY() * mZ);
