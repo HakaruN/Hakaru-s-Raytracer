@@ -71,3 +71,7 @@ void Sphere::setRadius(float radius)
 {
 	mRadius = radius;
 }
+void Sphere::setSize(float rad)
+{
+	mRadius = rad;
+}

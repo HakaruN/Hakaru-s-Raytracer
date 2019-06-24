@@ -17,6 +17,7 @@ class Triangle : public Renderable
 
 		virtual inline bool Intersects(Ray ray, float &t) override;
 		virtual Vector GetNormal(Vector point) override;
+		virtual inline void setSize(float rad) override;
 
 		float inline calcMaxDist();
 

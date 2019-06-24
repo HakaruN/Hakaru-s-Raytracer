@@ -22,10 +22,16 @@ class Vector
 		float GetZ();
 
 		inline Vector cross(Vector v) {
-			float i = (mY * v.GetZ()) + (v.GetY() * mZ);
-			float j = -((mX * v.GetZ()) + (v.GetX() * mZ));
-			float k = (mX * v.GetY()) + (v.GetX() * mY);
+			//float i = (mY * v.GetZ()) + (v.GetY() * mZ);
+			//float j = -((mX * v.GetZ()) + (v.GetX() * mZ));
+			//float k = (mX * v.GetY()) + (v.GetX() * mY);
+			//return Vector(i, j, k);
+
+			float i = (mY * v.GetZ()) - (v.GetY() * mZ);
+			float j = -((mX * v.GetZ()) - (v.GetX() * mZ));
+			float k = (mX * v.GetY()) - (v.GetX() * mY);
 			return Vector(i, j, k);
+
 		}
 		inline float dot(Vector a)
 		{
@@ -47,9 +53,9 @@ class Vector
 		inline float getMagnitude()
 		{
 			return(sqrt(
-				mX * mX +
-				mY * mY +
-				mZ * mZ
+				(mX * mX) +
+				(mY * mY) +
+				(mZ * mZ)
 			));
 		}
 		inline static float distanceBetweenVectors(Vector a, Vector b)

@@ -16,6 +16,7 @@
 #include "RayTracer.h"
 #include "Triangle.h"
 #include "Renderable.h"
+#include "Camera.h"
 
 #include "vendor\imgui\imgui.h"
 #include "vendor\imgui\imgui_impl_glfw.h"
@@ -29,7 +30,7 @@
 	#define OS_TYPE windows64
 #endif
 
-void render(int width, int height, float* frameBuffer, float* evenBuffer, float* oddBuffer, float* depthBuffer, Sphere light, std::vector<Renderable*>* renderables, float guiVerti, float guiHoriz,float guiDist, int guiObjectIndex, bool isCheckerboarding);
+void render(int width, int height, double fov, float* frameBuffer, float* evenBuffer, float* oddBuffer, float* depthBuffer, Sphere light, std::vector<Renderable*>* renderables, Camera& camera, float guiVerti, float guiHoriz,float guiDist, int guiObjectIndex, Vector camPos, bool isCheckerboarding, bool perspective, bool multithreaded);
 
 Colour white(255, 255, 255);
 Colour darkWhite(128, 128, 128);
@@ -39,7 +40,6 @@ Colour green(0, 255, 0);
 Colour blue(0, 0, 255);
 
 static double frameRate;
-static bool sphericalHitDetection = false;
 
 
 
@@ -48,6 +48,8 @@ int main(void)
 	GLFWwindow* window;
 
 	bool isCheckerboarding = false;
+	bool perspective = true;
+	bool multithreaded = true;
 	bool show_demo_window = true;
 	bool show_another_window = false;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -55,9 +57,11 @@ int main(void)
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;
-
-	const int width = 920;
-	const int height = 310;
+	 
+	const int width = 600;
+	const int height = 400;
+	Vector screenPosition(0,0,0);
+	Vector& ScreenPos = screenPosition;
 	const int colours = 4;//number of colours per pixel
 
 	float* evenBuffer = new float[width * height * colours];
@@ -65,11 +69,6 @@ int main(void)
 	float* frameBuffer = new float[width * height * colours];
 	float* depthBuffer = new float[width * height];
 	//float* stexil = new float[width * height];
-
-
-	Vector cameraPos(0,0,0);
-	
-
 
 	/* Create a windowed mode window and its OpenGL context */
 	window = glfwCreateWindow(width, height, "RayTracer", NULL, NULL);
@@ -88,26 +87,28 @@ int main(void)
 	std::vector<Renderable*>* renderables = new std::vector<Renderable*>;
 	renderables->reserve(renderablesCount);
 
-	Sphere* greenSphere = new Sphere(Vector(0, 0, 40), green, 40);
+	Sphere* greenSphere = new Sphere(Vector(1, 0.5, 35), green, 0.1);
 	Sphere* blueSphere = new Sphere(Vector(200, +200, 50), blue, 40);
-	Sphere* redSphere = new Sphere(Vector(width / 4, height / 2, -50), red, 50);
+	Sphere* redSphere = new Sphere(Vector(0.5, 0, 50), red, 1);
 	//Sphere* whiteSphere = new Sphere(Vector(width / 2, height / 2, 50), white, 60);
 	//Sphere* blackSphere = new Sphere(Vector(width / 2, height / 2, 50), black, 80);
 
 	Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(100, +100, 50),Vector(300, +150, 50),Vector(200, +200, 50));
 
-	//wrong
 	//Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-100, 0, 10),Vector(100, 0, 10),Vector(100, 0, 10));
 	
 	//renderables->push_back(blueTriangle);
 	renderables->push_back(greenSphere);
 	//renderables->push_back(blueSphere);
-	//renderables->push_back(redSphere);
+	renderables->push_back(redSphere);
 
 
-	Vector cameraPosition(0, 0, 0);
+	Vector cameraPosition(0, 0, -1);
+
+	Camera camera(cameraPosition,greenSphere->GetPos(), Vector(0,1,0), Maths::degToRad(55), (float)width/(float)height );
+
 	Sphere light(Vector(width, height , 50), white, 40);
-
+	bool guiOpen = true;
 
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -119,13 +120,13 @@ int main(void)
 	static float hsvColour[3];
 	static float rgbColour[3];
 
-	static float guiVerti = 0.5f;
-	static float guiHoriz = 0.5f;
-	static float guiSize = 50;
+	static float guiVerti = 0.0f;
+	static float guiHoriz = 0.0f;
+	static float guiSize = 0.5;
 	static int guiObjectIndex = 0;
 	static float lightVerti, lightHoriz = 0.25;
-	static float distance = 40;
-	static float fov = 80;
+	static float distance = 175;
+	double fov = 30;
 	
 	float t = 0;
 
@@ -147,10 +148,13 @@ int main(void)
 
 	while (!glfwWindowShouldClose(window))
 	{
-
-
-
-		render(width, height, frameBuffer, evenBuffer, oddBuffer, depthBuffer, light, renderables, guiVerti, guiHoriz, distance, guiObjectIndex, isCheckerboarding);
+		float tempFov = fov;
+		//std::cout << "Camera at: " << cameraPosition.GetX() << "," << cameraPosition.GetY() << "," << cameraPosition.GetZ() << " Object pos: " << (renderables->at(guiObjectIndex)->GetPos().GetX()) << "," << (renderables->at(guiObjectIndex)->GetPos().GetY()) << "," << (renderables->at(guiObjectIndex)->GetPos().GetZ()) << ",";
+		//std::cout << "Camera direction: " << camera.mForwards.GetX() << "," << camera.mForwards.GetY() << "," << camera.mForwards.GetZ();
+		//std::cout << " FOV:" << fov << std::endl;	
+		renderables->at(guiObjectIndex)->setSize(guiSize);
+		camera.update(cameraPosition, renderables->at(guiObjectIndex)->GetPos(), Vector(0,1,0), Maths::degToRad(fov), (float)width/(float)height);
+		render(width, height, fov, frameBuffer, evenBuffer, oddBuffer, depthBuffer, light, renderables, camera, guiVerti, guiHoriz, distance, guiObjectIndex, ScreenPos, isCheckerboarding, perspective, multithreaded);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glDrawPixels(width, height, GL_RGBA, GL_FLOAT, frameBuffer);
 		//spheres[guiSphereIndex].SetColour(Colour(rgbColour[0], rgbColour[1], rgbColour[2]));
@@ -169,17 +173,13 @@ int main(void)
 			ImGui::Begin("Blue balls");                          // Create a window called "Hello, world!" and append into it.
 
 			//ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-			ImGui::Checkbox("Checkerboarding", &isCheckerboarding);      // Edit bools storing our window open/close state
-			//ImGui::Checkbox("Another Window", &show_another_window);
-			ImGui::SliderFloat("FOV", &fov, 0.0f, 90.0f);
 
 			ImGui::SliderFloat("Vertical", &guiVerti, -1.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
 			ImGui::SliderFloat("Horisontal", &guiHoriz, -1.0f, 1.0f);
-			ImGui::SliderFloat("Depth", &distance, 0.0f, 400.0f);
-			//ImGui::SliderFloat("Size", &guiSize, 0.0f, 100.0f);
 
-			ImGui::SliderFloat("Lighting Vertical", &lightVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
-			ImGui::SliderFloat("Lighting Horizontal", &lightHoriz, 0.0f, 1.0f);
+			ImGui::SliderFloat("Distance", &distance, 0.0f, 100.0f);
+			ImGui::SliderFloat("Size", &guiSize, 0.0f, 100.0f);
+
 			ImGui::SliderInt("object select", &guiObjectIndex, 0, renderables->size() - 1);
 			//ImGui::ColorEdit3("clear color", hsvColour);//Edit 3 floats representing a color
 			//ImGui::ColorConvertHSVtoRGB(hsvColour[0], hsvColour[1], hsvColour[2], rgbColour[0], rgbColour[1], rgbColour[2]);
@@ -191,16 +191,40 @@ int main(void)
 			//ImGui::Text("counter = %d", counter);
 			
 			//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+			ImGui::End();
+		}
+
+		{//window for fps
+			ImGui::Begin("FPS");
 			ImGui::Text("FPS %.2f FPS", frameRate);
 			ImGui::End();
 		}
 
+		{//window for render controls
+			ImGui::Begin("Render Controls");
+			ImGui::Checkbox("Checkerboarding", &isCheckerboarding);      // Edit bools storing our window open/close state
+			ImGui::Checkbox("Perspective", &perspective);
+			ImGui::Checkbox("Multithreading", &multithreaded);
+			ImGui::SliderFloat("FOV", &tempFov, 5.0f, 90.0f);
+			ImGui::End();
+		}
+
+		{//window for render controls
+			ImGui::Begin("Light controls");
+			ImGui::SliderFloat("Lighting Vertical", &lightVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::SliderFloat("Lighting Horizontal", &lightHoriz, 0.0f, 1.0f);
+			ImGui::End();
+		}
+
+
+		fov = tempFov;
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		glfwSwapBuffers(window);
 
 		glfwPollEvents();
+
 		
 	}
 
@@ -220,12 +244,12 @@ int main(void)
 
 
 
-void render(int width, int height, float* frameBuffer, float* evenBuffer, float* oddBuffer, float* depthBuffer, Sphere light, std::vector<Renderable*>* renderables, float guiVerti, float guiHoriz, float guiDist, int guiObjectIndex, bool isCheckerboarding)
+void render(int width, int height, double fov, float* frameBuffer, float* evenBuffer, float* oddBuffer, float* depthBuffer, Sphere light, std::vector<Renderable*>* renderables, Camera& camera, float guiVerti, float guiHoriz, float guiDist, int guiObjectIndex, Vector ScreenPos, bool isCheckerboarding, bool perspective, bool multithreaded)
 {
 	renderables->at(guiObjectIndex)->SetPos(Vector(width * guiHoriz, height *guiVerti, guiDist));
 	float t = 0;
 	std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
-	RayTracer::runRayTracer(width, height, frameBuffer, evenBuffer, oddBuffer, depthBuffer, std::ref(t), light, renderables, isCheckerboarding);
+	RayTracer::runRayTracer(width, height, fov, frameBuffer, evenBuffer, oddBuffer, depthBuffer, std::ref(t), camera, light, renderables, ScreenPos, isCheckerboarding, perspective, multithreaded);
 
 	std::chrono::steady_clock::time_point end(std::chrono::steady_clock::now());
 	frameRate = 1 / std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
