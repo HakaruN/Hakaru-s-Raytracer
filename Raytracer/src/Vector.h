@@ -17,9 +17,9 @@ class Vector
 		inline Vector operator / (float d) { return Vector(mX / d, mY / d, mZ / d); }//performs a subtraction of the vectors respective components and returns a new vector
 
 		//getterst and setters	
-		float GetX();
-		float GetY();
-		float GetZ();
+		inline float GetX() { return mX; }
+		inline float GetY() { return mY; }
+		inline float GetZ() { return mZ; }
 		void SetX(float x);
 		void SetY(float y);
 		void SetZ(float z);

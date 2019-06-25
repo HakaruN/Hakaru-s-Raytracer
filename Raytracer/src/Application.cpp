@@ -59,12 +59,14 @@ int main(void)
 	bool show_another_window = false;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;
 	 
-	const int width = 800;
+	const int width = 600;
 	const int height = 600;
+
 	const int GUIWidth = 500;
 	const int GUIHeight = 500;
 	const int colours = 4;//number of colours per pixel
@@ -73,6 +75,9 @@ int main(void)
 	float* oddBuffer = new float[width * height * colours];
 	float* frameBuffer = new float[width * height * colours];
 	float* depthBuffer = new float[width * height];
+
+
+	const unsigned int n = width * height;
 
 #pragma region OpenGL window setup
 	window = glfwCreateWindow(width, height, "Render", NULL, NULL);//Creating the openGL rendering window
@@ -102,20 +107,22 @@ int main(void)
 	std::vector<Renderable*>* renderables = new std::vector<Renderable*>;
 	renderables->reserve(renderablesCount);
 
-	Sphere* greenSphere = new Sphere(Vector(1, 0.5, 35), green, 0.5);
-	Sphere* blueSphere = new Sphere(Vector(200, +200, 50), blue, 40);
-	Sphere* redSphere = new Sphere(Vector(-1, -0.5, 50), red, 1);
-	//Sphere* whiteSphere = new Sphere(Vector(width / 2, height / 2, 50), white, 60);
-	//Sphere* blackSphere = new Sphere(Vector(width / 2, height / 2, 50), black, 80);
+	Sphere* greenSphere = new Sphere(Vector(0,0,0), green, 0.5);
+	Sphere* blueSphere = new Sphere(Vector(+15, +15, 50), blue, 10);
+	Sphere* redSphere = new Sphere(Vector(-15, -15, 50), red, 1);
+	Sphere* whiteSphere = new Sphere(Vector(+15, -15, 50), white, 4);
+	Sphere* blackSphere = new Sphere(Vector(-15, 15, 50), black, 7);
 
-	Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(100, +100, 50),Vector(300, +150, 50),Vector(200, +200, 50));
+	Triangle* blueTriangle = new Triangle(Vector(0,0,0),blue,Vector(-1, 0, 50),Vector(1, +0, 50),Vector(0, +0.5, 50));
 
 	//Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-100, 0, 10),Vector(100, 0, 10),Vector(100, 0, 10));
 	
 	//renderables->push_back(blueTriangle);
 	renderables->push_back(greenSphere);
 	//renderables->push_back(blueSphere);
-	renderables->push_back(redSphere);
+	//renderables->push_back(redSphere);
+	//renderables->push_back(whiteSphere);
+	//renderables->push_back(blackSphere);
 #pragma endregion
 
 
@@ -170,16 +177,8 @@ int main(void)
 		float tempFov = fov;
 		light.SetPos(Vector(width * lightHoriz, height * lightVerti, 50));
 		renderables->at(guiObjectIndex)->setSize(guiSize);
-		fov = tempFov;
 
-		if (freeCam)
-		{
-			camera.update(cameraPosition, camLook, Vector(0, 1, 0), Maths::degToRad(fov), width / height);
-		}
-		else
-		{
-			camera.update(cameraPosition, renderables->at(guiObjectIndex)->GetPos(), Vector(0,1,0), Maths::degToRad(fov), (float)width/(float)height);
-		}
+
 
 		glfwMakeContextCurrent(window);
 		//glWindowPos2i(500, 500);
@@ -242,12 +241,13 @@ int main(void)
 		{//window for render controls
 			ImGui::Begin("Camera Controls");
 			ImGui::SliderFloat("FOV", &tempFov, 5.0f, 90.0f);
+			
 			float x = 0;
 			float y = 0;
 			float z = 0;
-			ImGui::SliderFloat("Cam-X", &x, -25, 25);
-			ImGui::SliderFloat("Cam-Y", &y, -25, 25);
-			ImGui::SliderFloat("Cam-Z", &z, -25, 25);
+			ImGui::SliderFloat("Cam-X", &x, -2, 2);
+			ImGui::SliderFloat("Cam-Y", &y, -2, 2);
+			ImGui::SliderFloat("Cam-Z", &z, -2, 2);
 			ImGui::Checkbox("Free look", &freeCam);
 			camLook.SetX(x);
 			camLook.SetY(y);
@@ -257,9 +257,23 @@ int main(void)
 		///light controls
 		{
 			ImGui::Begin("Light controls");
-			ImGui::SliderFloat("Light V", &lightVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
-			ImGui::SliderFloat("Light H", &lightHoriz, 0.0f, 1.0f);
+			ImGui::SliderFloat("Light V", &lightVerti, -1.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::SliderFloat("Light H", &lightHoriz, -1.0f, 1.0f);
 			ImGui::End();
+		}
+
+		fov = tempFov;
+		if (freeCam)
+		{
+			camera.update(cameraPosition, camLook, Vector(0, 1, 0), Maths::degToRad(fov), (float)width / (float)height);
+		}
+		else
+		{
+			//2 methods for finding the look at variable, one is the target to look at, the other is a delta vector between the looker and the lookee
+			//Vector::vectorBetweenVectors(renderables->at(guiObjectIndex)->GetPos(), cameraPosition);
+			//renderables->at(guiObjectIndex)->GetPos();
+
+			camera.update(cameraPosition, renderables->at(guiObjectIndex)->GetPos(), Vector(0, 1, 0), Maths::degToRad(fov), (float)width / (float)height);
 		}
 		
 
@@ -270,12 +284,15 @@ int main(void)
 		glfwPollEvents();		
 	}
 
+
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
-	glDeleteTextures(1, &renderTexture);
 
+
+	//glDeleteTextures(1, &renderTexture);
 	glfwTerminate();
+
 
 	delete[] evenBuffer;
 	delete[] oddBuffer;
