@@ -3,6 +3,7 @@
 #include "Sphere.h"
 #include "Vector.h"
 #include "Maths.h"
+#include <iostream>
 //#include "Renderable.h"
 
 Sphere::Sphere(Vector pos, Colour colour, float rad)
@@ -18,6 +19,7 @@ Sphere::Sphere()
 
 bool Sphere::Intersects(Ray ray, float &t)
 {
+	float tempt = t;
 	 // Point intersection p = pos + dir * t where t = distance along the ray
 	Vector rayOrigin = ray.GetOrigin();//pos
 	Vector rayDirection = ray.GetDirection();//dir
@@ -33,7 +35,11 @@ bool Sphere::Intersects(Ray ray, float &t)
 		float t1 = -b + discriminant;
 
 		t = (t0 < t1) ? t0 : t1;//if t0 = t1 then the ray hit tangent to the sphere
-		return true;
+		if (t < tempt)
+			//std::cout << "t:" << t << " tempt:" << tempt << std::endl;
+			return true;
+
+		return false;
 	}
 }
 

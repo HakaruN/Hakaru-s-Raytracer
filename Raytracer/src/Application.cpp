@@ -57,7 +57,12 @@ int main(void)
 	bool multithreaded = true;
 	bool show_demo_window = true;
 	bool show_another_window = false;
-	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+	//background colouring
+	ImVec4 clear_colour = ImVec4(0.0468f, 0.0468f, 0.0635f, 1.00f);
+	rgbColour[0] = clear_colour.x;
+	rgbColour[1] = clear_colour.y;
+	rgbColour[2] = clear_colour.z;
 
 
 	/* Initialize the library */
@@ -119,7 +124,7 @@ int main(void)
 	
 	//renderables->push_back(blueTriangle);
 	renderables->push_back(greenSphere);
-	//renderables->push_back(blueSphere);
+	renderables->push_back(blueSphere);
 	//renderables->push_back(redSphere);
 	//renderables->push_back(whiteSphere);
 	//renderables->push_back(blackSphere);
@@ -171,7 +176,9 @@ int main(void)
 #pragma endregion
 
 	
-
+	float camPosX = 0;
+	float camPosY = 0;
+	float camPosZ = 0;
 	while (!glfwWindowShouldClose(window) || !glfwWindowShouldClose(GUIWindow))
 	{
 		float tempFov = fov;
@@ -241,17 +248,14 @@ int main(void)
 		{//window for render controls
 			ImGui::Begin("Camera Controls");
 			ImGui::SliderFloat("FOV", &tempFov, 5.0f, 90.0f);
-			
-			float x = 0;
-			float y = 0;
-			float z = 0;
-			ImGui::SliderFloat("Cam-X", &x, -2, 2);
-			ImGui::SliderFloat("Cam-Y", &y, -2, 2);
-			ImGui::SliderFloat("Cam-Z", &z, -2, 2);
+
+			ImGui::SliderFloat("Cam-X", &camPosX, -3, 3);
+			ImGui::SliderFloat("Cam-Y", &camPosY, -3, 3);
+			ImGui::SliderFloat("Cam-Z", &camPosZ, -3, 150);
 			ImGui::Checkbox("Free look", &freeCam);
-			camLook.SetX(x);
-			camLook.SetY(y);
-			camLook.SetZ(z);
+			camLook.SetX(camPosX);
+			camLook.SetY(camPosY);
+			camLook.SetZ(camPosZ);
 			ImGui::End();
 		}
 		///light controls
@@ -265,7 +269,10 @@ int main(void)
 		fov = tempFov;
 		if (freeCam)
 		{
-			camera.update(cameraPosition, camLook, Vector(0, 1, 0), Maths::degToRad(fov), (float)width / (float)height);
+			cameraPosition.SetX(camPosX);
+			cameraPosition.SetY(camPosY);
+			cameraPosition.SetZ(camPosZ);
+			camera.update(cameraPosition, Vector(0,0, cameraPosition.GetZ()+1), Vector(0, 1, 0), Maths::degToRad(fov), (float)width / (float)height);
 		}
 		else
 		{
@@ -273,7 +280,7 @@ int main(void)
 			//Vector::vectorBetweenVectors(renderables->at(guiObjectIndex)->GetPos(), cameraPosition);
 			//renderables->at(guiObjectIndex)->GetPos();
 
-			camera.update(cameraPosition, renderables->at(guiObjectIndex)->GetPos(), Vector(0, 1, 0), Maths::degToRad(fov), (float)width / (float)height);
+			camera.update(cameraPosition, Vector::vectorBetweenVectors(renderables->at(guiObjectIndex)->GetPos(), Vector(camPosX, camPosY, camPosZ)), Vector(0, 1, 0), Maths::degToRad(fov), (float)width / (float)height);
 		}
 		
 
