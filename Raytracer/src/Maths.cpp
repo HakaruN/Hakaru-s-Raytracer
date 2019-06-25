@@ -21,11 +21,11 @@ Vector Maths::Normalise(Vector a)
 {
 	return Vector(sqrt(pow(a.GetX(), 2)), sqrt(pow(a.GetY(), 2)), sqrt(pow(a.GetZ(), 2)));
 }
-float Maths::degToRad(float degrees) 
+float Maths::degToRad(double degrees) 
 {
 	return(degrees * (3.1415 / 180));//radians = degrees  * pi / 180
 }
-float Maths::radToDeg(float radians)
+float Maths::radToDeg(double radians)
 {
 	return(radians * (180 / 3.1415 ));//radians = degrees  * 180 / pi
 }

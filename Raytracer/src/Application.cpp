@@ -41,7 +41,7 @@ Colour blue(0, 0, 255);
 Colour background(15, 15, 15);
 
 static float hsvColour[3];
-static float rgbColour[3] = { 0.7, 0.5, 0.7 };
+static float rgbColour[3] = { 0.7f, 0.5f, 0.7f };
 static double frameRate;
 
 
@@ -141,9 +141,9 @@ int main(void)
 	static int guiObjectIndex = 0;
 	static float lightVerti, lightHoriz = 0.25;
 	static float distance = 175;
-	double fov = 30;
+	float fov = 30;
 	float t = 0; 
-	Camera camera(cameraPosition, renderables->at(guiObjectIndex)->GetPos() , Vector(0,1,0), Maths::degToRad(55), (float)width/(float)height );
+	Camera camera(cameraPosition, renderables->at(guiObjectIndex)->GetPos() , Vector(0,1,0), Maths::degToRad(55), width/height);
 
 #pragma region TODO: add rendering to texture for the rendermethod instead of glDrawPixels
 	//texture setup for the cpu-gpu framebuffer passover
@@ -165,7 +165,7 @@ int main(void)
 
 	
 
-	while (!glfwWindowShouldClose(window))
+	while (!glfwWindowShouldClose(window) || !glfwWindowShouldClose(GUIWindow))
 	{
 		float tempFov = fov;
 		light.SetPos(Vector(width * lightHoriz, height * lightVerti, 50));
@@ -174,7 +174,7 @@ int main(void)
 
 		if (freeCam)
 		{
-			camera.update(cameraPosition, camLook, Vector(0, 1, 0), Maths::degToRad(fov), (float)width / (float)height);
+			camera.update(cameraPosition, camLook, Vector(0, 1, 0), Maths::degToRad(fov), width / height);
 		}
 		else
 		{
@@ -182,6 +182,7 @@ int main(void)
 		}
 
 		glfwMakeContextCurrent(window);
+		//glWindowPos2i(500, 500);
 		glClear(GL_COLOR_BUFFER_BIT);
 		render(width, height, fov, frameBuffer, evenBuffer, oddBuffer, depthBuffer, background, light, renderables, camera, guiVerti, guiHoriz, distance, guiObjectIndex, isCheckerboarding, perspective, multithreaded);
 		glDrawPixels(width, height, GL_RGBA, GL_FLOAT, frameBuffer);	
@@ -193,9 +194,8 @@ int main(void)
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		glWindowPos2i(0, 0);
 
-		// 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+		///Object manipulation
 		{
 			//static int counter = 0;
 
@@ -209,8 +209,8 @@ int main(void)
 			ImGui::SliderFloat("Distance", &distance, 0.0f, 100.0f);
 			ImGui::SliderFloat("Size", &guiSize, 0.0f, 100.0f);
 
-			ImGui::SliderInt("object select", &guiObjectIndex, 0, renderables->size() - 1);
-
+			ImGui::SliderInt("object select", &guiObjectIndex, 0, (int)renderables->size() - 1);
+				
 			ImGui::ColorPicker3("Background Colour", rgbColour);
 			background.SetRed(rgbColour[0]);
 			background.SetGreen(rgbColour[1]);
@@ -224,11 +224,13 @@ int main(void)
 			//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
 		}
+		///fps counter
 		{//window for fps
 			ImGui::Begin("FPS");
 			ImGui::Text("FPS %.2f FPS", frameRate);
 			ImGui::End();
 		}
+		///rendering controls
 		{//window for render controls
 			ImGui::Begin("Render Controls");
 			ImGui::Checkbox("Checkerboarding", &isCheckerboarding);      // Edit bools storing our window open/close state
@@ -236,6 +238,7 @@ int main(void)
 			ImGui::Checkbox("Multithreading", &multithreaded);
 			ImGui::End();
 		}
+		///camera controls
 		{//window for render controls
 			ImGui::Begin("Camera Controls");
 			ImGui::SliderFloat("FOV", &tempFov, 5.0f, 90.0f);
@@ -251,15 +254,14 @@ int main(void)
 			camLook.SetZ(z);
 			ImGui::End();
 		}
-		{//window for render controls
+		///light controls
+		{
 			ImGui::Begin("Light controls");
 			ImGui::SliderFloat("Light V", &lightVerti, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
 			ImGui::SliderFloat("Light H", &lightHoriz, 0.0f, 1.0f);
 			ImGui::End();
 		}
 		
-
-
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -289,7 +291,7 @@ void render(int width, int height, double fov, float* frameBuffer, float* evenBu
 	renderables->at(guiObjectIndex)->SetPos(Vector(width * guiHoriz, height *guiVerti, guiDist));
 	float t = 0;
 	std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
-	RayTracer::runRayTracer(width, height, fov, frameBuffer, evenBuffer, oddBuffer, depthBuffer, std::ref(t), background, camera, light, renderables, isCheckerboarding, perspective, multithreaded);
+	RayTracer::runRayTracer(width, height, frameBuffer, evenBuffer, oddBuffer, depthBuffer, std::ref(t), background, camera, light, renderables, isCheckerboarding, perspective, multithreaded);
 
 	std::chrono::steady_clock::time_point end(std::chrono::steady_clock::now());
 	frameRate = 1 / std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
