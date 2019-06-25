@@ -30,7 +30,7 @@
 	#define OS_TYPE windows64
 #endif
 
-void render(int width, int height, double fov, float* frameBuffer, float* evenBuffer, float* oddBuffer, float* depthBuffer, Colour& background, Sphere light, std::vector<Renderable*>* renderables, Camera& camera, float guiVerti, float guiHoriz,float guiDist, int guiObjectIndex, bool isCheckerboarding, bool perspective, bool multithreaded);
+void render(int width, int height, double fov, float* frameBuffer, float* depthBuffer, Colour& background, Sphere light, std::vector<Renderable*>* renderables, Camera& camera, float guiVerti, float guiHoriz,float guiDist, int guiObjectIndex, bool isCheckerboarding, bool perspective, bool multithreaded);
 
 Colour white(255, 255, 255);
 Colour darkWhite(128, 128, 128);
@@ -57,6 +57,7 @@ int main(void)
 	bool multithreaded = true;
 	bool show_demo_window = true;
 	bool show_another_window = false;
+	bool renderingDepthBuffer = false;
 
 	//background colouring
 	ImVec4 clear_colour = ImVec4(0.0468f, 0.0468f, 0.0635f, 1.00f);
@@ -76,10 +77,8 @@ int main(void)
 	const int GUIHeight = 500;
 	const int colours = 4;//number of colours per pixel
 
-	float* evenBuffer = new float[width * height * colours];
-	float* oddBuffer = new float[width * height * colours];
 	float* frameBuffer = new float[width * height * colours];
-	float* depthBuffer = new float[width * height];
+	float* depthBuffer = new float[width * height * colours];
 
 
 	const unsigned int n = width * height;
@@ -190,8 +189,18 @@ int main(void)
 		glfwMakeContextCurrent(window);
 		//glWindowPos2i(500, 500);
 		glClear(GL_COLOR_BUFFER_BIT);
-		render(width, height, fov, frameBuffer, evenBuffer, oddBuffer, depthBuffer, background, light, renderables, camera, guiVerti, guiHoriz, distance, guiObjectIndex, isCheckerboarding, perspective, multithreaded);
-		glDrawPixels(width, height, GL_RGBA, GL_FLOAT, frameBuffer);	
+		render(width, height, fov, frameBuffer, depthBuffer, background, light, renderables, camera, guiVerti, guiHoriz, distance, guiObjectIndex, isCheckerboarding, perspective, multithreaded);
+
+		if (!renderingDepthBuffer)
+		{
+			glDrawPixels(width, height, GL_RGBA, GL_FLOAT, frameBuffer);	
+		}
+		else
+		{
+			glDrawPixels(width, height, GL_RGBA, GL_FLOAT, depthBuffer);
+		}
+
+
 		glfwSwapBuffers(window);
 
 		glfwMakeContextCurrent(GUIWindow);
@@ -242,6 +251,7 @@ int main(void)
 			ImGui::Checkbox("Checkerboarding", &isCheckerboarding);      // Edit bools storing our window open/close state
 			//ImGui::Checkbox("Perspective", &perspective);
 			ImGui::Checkbox("Multithreading", &multithreaded);
+			ImGui::Checkbox("Render depthBuffer", &renderingDepthBuffer);
 			ImGui::End();
 		}
 		///camera controls
@@ -249,9 +259,9 @@ int main(void)
 			ImGui::Begin("Camera Controls");
 			ImGui::SliderFloat("FOV", &tempFov, 5.0f, 90.0f);
 
-			ImGui::SliderFloat("Cam-X", &camPosX, -3, 3);
-			ImGui::SliderFloat("Cam-Y", &camPosY, -3, 3);
-			ImGui::SliderFloat("Cam-Z", &camPosZ, -3, 150);
+			ImGui::SliderFloat("Cam-X", &camPosX, -1.5, 1.5);
+			ImGui::SliderFloat("Cam-Y", &camPosY, -1.5, 1.5);
+			ImGui::SliderFloat("Cam-Z", &camPosZ, -1.5, 150);
 			ImGui::Checkbox("Free look", &freeCam);
 			camLook.SetX(camPosX);
 			camLook.SetY(camPosY);
@@ -301,8 +311,6 @@ int main(void)
 	glfwTerminate();
 
 
-	delete[] evenBuffer;
-	delete[] oddBuffer;
 	delete [] frameBuffer;
 	delete [] depthBuffer;
 	return 0;
@@ -310,12 +318,12 @@ int main(void)
 
 
 
-void render(int width, int height, double fov, float* frameBuffer, float* evenBuffer, float* oddBuffer, float* depthBuffer, Colour& background, Sphere light, std::vector<Renderable*>* renderables, Camera& camera, float guiVerti, float guiHoriz, float guiDist, int guiObjectIndex, bool isCheckerboarding, bool perspective, bool multithreaded)
+void render(int width, int height, double fov, float* frameBuffer, float* depthBuffer, Colour& background, Sphere light, std::vector<Renderable*>* renderables, Camera& camera, float guiVerti, float guiHoriz, float guiDist, int guiObjectIndex, bool isCheckerboarding, bool perspective, bool multithreaded)
 {
 	renderables->at(guiObjectIndex)->SetPos(Vector(width * guiHoriz, height *guiVerti, guiDist));
 	float t = 0;
 	std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
-	RayTracer::runRayTracer(width, height, frameBuffer, evenBuffer, oddBuffer, depthBuffer, std::ref(t), background, camera, light, renderables, isCheckerboarding, perspective, multithreaded);
+	RayTracer::runRayTracer(width, height, frameBuffer, depthBuffer, background, camera, light, renderables, isCheckerboarding, perspective, multithreaded);
 
 	std::chrono::steady_clock::time_point end(std::chrono::steady_clock::now());
 	frameRate = 1 / std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
