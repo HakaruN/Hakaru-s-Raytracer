@@ -12,6 +12,7 @@ class Renderable//abstract class for the renderable objects to inherit from
 		virtual Colour GetColour() = 0;
 		virtual float GetViewableArea(Vector toCamera) = 0;
 		virtual void setSize(float rad) = 0;
+		virtual float getSize() = 0;
 
 	protected:
 		Vector mPosition;//Sphere's position

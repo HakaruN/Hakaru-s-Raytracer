@@ -65,6 +65,10 @@ float Sphere::GetViewableArea(Vector toCamera)
 {
 	return 3.14 * mRadius * mRadius;
 }
+float Sphere::getSize()
+{
+	return mRadius;
+}
 
 void Sphere::SetPos(Vector pos)
 {

@@ -117,19 +117,19 @@ int main(void)
 	renderables->reserve(renderablesCount);
 
 	//Sphere* greenSphere = new Sphere(Vector(0,0,0), green, 0.5);
-	Sphere* greenSphere = new Sphere(Vector(1, 0.5, 35), green, 0.5);
+	Sphere* greenSphere = new Sphere(Vector(1, 0.5, 35), green, 5);
 	Sphere* blueSphere = new Sphere(Vector(+15, +15, 50), blue, 10);
 	Sphere* redSphere = new Sphere(Vector(-15, -15, -50), red, 1);
 	Sphere* whiteSphere = new Sphere(Vector(+15, -15, 50), white, 4);
 	Sphere* blackSphere = new Sphere(Vector(-15, 15, 50), black, 7);
 
-	Triangle* blueTriangle = new Triangle(Vector(0,0,0),blue,Vector(-4, 0, 50),Vector(4, +0, 50),Vector(0, +4, 50));
+	Triangle* blueTriangle = new Triangle(Vector(0,0,0),blue,Vector(00, 0, 50),Vector(40, +0, 50),Vector(0, +40, 50));
 
 	//Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-100, 0, 10),Vector(100, 0, 10),Vector(100, 0, 10));
 	
 	//renderables->push_back(blueTriangle);
 	renderables->push_back(greenSphere);
-	//renderables->push_back(blueSphere);
+	renderables->push_back(blueSphere);
 	//renderables->push_back(redSphere);
 	//renderables->push_back(whiteSphere);
 	//renderables->push_back(blackSphere);
@@ -152,15 +152,16 @@ int main(void)
 	const char* glsl_version = "#version 130";
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
+	static int guiObjectIndex = 0;
+	Camera camera(cameraPosition, renderables->at(guiObjectIndex)->GetPos() , Vector(0,1,0), Maths::degToRad(55), width/height);
+
 	static float guiVerti = 0.0f;
 	static float guiHoriz = 0.0f;
-	static float guiSize = 0.5;
-	static int guiObjectIndex = 0;
+	static float guiSize = renderables->at(guiObjectIndex)->getSize();
 	static float lightVerti, lightHoriz = 0.25;
-	static float distance = 175;
+	static float distance = (renderables->at(guiObjectIndex)->GetPos() - cameraPosition).getMagnitude();
 	float fov = 30;
 	float t = 0; 
-	Camera camera(cameraPosition, renderables->at(guiObjectIndex)->GetPos() , Vector(0,1,0), Maths::degToRad(55), width/height);
 
 #pragma region TODO: add rendering to texture for the rendermethod instead of glDrawPixels
 	//texture setup for the cpu-gpu framebuffer passover
@@ -218,18 +219,16 @@ int main(void)
 
 			//ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
 
-			ImGui::SliderFloat("Vertical", &guiVerti, -1.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
-			ImGui::SliderFloat("Horisontal", &guiHoriz, -1.0f, 1.0f);
+			ImGui::SliderFloat("Vertical", &guiVerti, -50.0f, 50.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::SliderFloat("Horisontal", &guiHoriz, -50.0f, 50.0f);
 
 			ImGui::SliderFloat("Distance", &distance, 0.0f, 100.0f);
 			ImGui::SliderFloat("Size", &guiSize, 0.0f, 100.0f);
 
 			ImGui::SliderInt("object select", &guiObjectIndex, 0, (int)renderables->size() - 1);
-				
-			ImGui::ColorPicker3("Background Colour", rgbColour);
-			background.SetRed(rgbColour[0]);
-			background.SetGreen(rgbColour[1]);
-			background.SetBlue(rgbColour[2]);
+			
+			ImGui::Text("Camera pos: %f,%f,%f", cameraPosition.GetX(), cameraPosition.GetY(), cameraPosition.GetZ());
+			ImGui::Text("Object pos: %f,%f,%f", renderables->at(guiObjectIndex)->GetPos().GetX(), renderables->at(guiObjectIndex)->GetPos().GetY(), renderables->at(guiObjectIndex)->GetPos().GetZ());
 			
 			//if (ImGui::Button("Button"))// Buttons return true when clicked (most widgets return true when edited/activated)
 			//render(width, height, frameBuffer, evenBuffer, oddBuffer, depthBuffer, light, renderables, renderablesCount, guiVerti, guiHoriz, guiObjectIndex, isCheckerboarding);
@@ -237,6 +236,16 @@ int main(void)
 			//ImGui::Text("counter = %d", counter);
 			
 			//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+			ImGui::End();
+		}
+		///background colour
+		{
+			ImGui::Begin("Background");
+			ImGui::ColorPicker3("Background Colour", rgbColour);
+			background.SetRed(rgbColour[0]);
+			background.SetGreen(rgbColour[1]);
+			background.SetBlue(rgbColour[2]);
+
 			ImGui::End();
 		}
 		///fps counter
@@ -259,9 +268,9 @@ int main(void)
 			ImGui::Begin("Camera Controls");
 			ImGui::SliderFloat("FOV", &tempFov, 5.0f, 90.0f);
 
-			ImGui::SliderFloat("Cam-X", &camPosX, -1.5, 1.5);
-			ImGui::SliderFloat("Cam-Y", &camPosY, -1.5, 1.5);
-			ImGui::SliderFloat("Cam-Z", &camPosZ, -1.5, 150);
+			ImGui::SliderFloat("Cam-X", &camPosX, -30, 30);
+			ImGui::SliderFloat("Cam-Y", &camPosY, -30, 30);
+			ImGui::SliderFloat("Cam-Z", &camPosZ, -4, 150);
 			ImGui::Checkbox("Free look", &freeCam);
 			camLook.SetX(camPosX);
 			camLook.SetY(camPosY);
@@ -319,7 +328,8 @@ int main(void)
 
 void render(int width, int height, int coloursPerPixel, double fov, float* frameBuffer, bool renderingDepthBuffer, Colour& background, Sphere light, std::vector<Renderable*>* renderables, Camera& camera, float guiVerti, float guiHoriz, float guiDist, int guiObjectIndex, bool isCheckerboarding, bool perspective, bool multithreaded)
 {
-	renderables->at(guiObjectIndex)->SetPos(Vector(width * guiHoriz, height *guiVerti, guiDist));
+	//renderables->at(guiObjectIndex)->SetPos(Vector(width * guiHoriz, height *guiVerti, guiDist));
+	renderables->at(guiObjectIndex)->SetPos(Vector(guiHoriz, guiVerti, guiDist));
 	float t = 0;
 	std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
 	RayTracer::runRayTracer(width, height, coloursPerPixel, frameBuffer, renderingDepthBuffer, background, camera, light, renderables, isCheckerboarding, perspective, multithreaded);

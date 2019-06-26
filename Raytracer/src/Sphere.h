@@ -13,6 +13,7 @@ class Sphere : public Renderable
 		virtual inline bool Intersects(Ray ray, float &t) override;
 		virtual inline void setSize(float rad) override;
 
+		virtual float getSize() override;
 		
 		float GetRadius();
 		virtual Vector GetNormal(Vector point) override;

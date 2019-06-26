@@ -32,6 +32,11 @@ Vector Triangle::GetPos()
 {
 	return mPosition;
 }
+float Triangle::getSize()
+{
+	return 0;
+}
+
 void Triangle::SetPos(Vector pos)
 {
 

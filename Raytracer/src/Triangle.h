@@ -11,6 +11,7 @@ class Triangle : public Renderable
 		virtual Vector GetPos() override;
 		virtual Colour GetColour() override;
 		virtual float GetViewableArea(Vector toCamera) override;
+		virtual float getSize() override;
 
 		virtual void SetPos(Vector pos) override;
 		virtual void SetColour(Colour colour) override;
