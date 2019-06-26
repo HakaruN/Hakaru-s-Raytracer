@@ -155,11 +155,13 @@ int main(void)
 	Sphere* blackSphere = new Sphere(Vector(-15, 15, 50), black, 7);
 
 	Triangle* blueTriangle = new Triangle(Vector(0, 0, 40), blue,Vector(-2, -2, 1),Vector(2, -2, 1),Vector(0, 2, 1));
+	Triangle* greenTriangle = new Triangle(Vector(0, 0, 40), green, Vector(-2, -2, 1), Vector(2, -2, 1), Vector(0, 2, 1));
 
 	//Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-100, 0, 10),Vector(100, 0, 10),Vector(100, 0, 10));
 	
 	//renderables->push_back(blueTriangle);
-	renderables->push_back(greenSphere);
+	renderables->push_back(greenTriangle);
+	//renderables->push_back(greenSphere);
 	renderables->push_back(blueSphere);
 	//renderables->push_back(redSphere);
 	//renderables->push_back(whiteSphere);

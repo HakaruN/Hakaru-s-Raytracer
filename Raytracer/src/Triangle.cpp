@@ -97,11 +97,10 @@ bool Triangle::Intersects(Ray ray, float &t)
 	float d = normalVec.dot(mVertices[0]);
 	t = ((normalVec.dot(rayOrigin)) + d) / normalVec.dot(rayDirection);
 
-	/*
+	
 	if (t < 0)
-		//std::cout << "Triangle behind camera" << std::endl;
 		return false;//triangle is behind camera
-	*/
+	
 
 	//compute intersection point using the ray formula
 	Vector p = rayOrigin + (rayDirection * t);
@@ -112,21 +111,34 @@ bool Triangle::Intersects(Ray ray, float &t)
 	Vector vp0 = p - mVertices[0];
 	Vector c = edge0.cross(vp0);
 	if (normalVec.dot(c) < 0)
+	{
+		t = tempt;
 		return false;
+	}
 
 	Vector edge1 = mVertices[2] - mVertices[1];
 	Vector vp1 = p - mVertices[1];
 	c = edge1.cross(vp1);
 	if (normalVec.dot(c) < 0)
+	{
+		t = tempt;
 		return false;
+	}
 
 	Vector edge3 = mVertices[0] - mVertices[2];
 	Vector vp2 = p - mVertices[2];
 	c = edge3.cross(vp2);
 	if (normalVec.dot(c) < 0)
+	{
+		t = tempt;
 		return false;
+	}
 
-	return true;
+	if (t < tempt)
+		return true;
+
+	t = tempt;
+	return false;
 }
 
 float Triangle::GetViewableArea(Vector toCamera) {

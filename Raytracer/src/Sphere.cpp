@@ -39,9 +39,9 @@ bool Sphere::Intersects(Ray ray, float &t)
 
 		t = (t0 < t1) ? t0 : t1;//if t0 = t1 then the ray hit tangent to the sphere
 		if (t < tempt)
-			//std::cout << "t:" << t << " tempt:" << tempt << std::endl;
 			return true;
 
+		t = tempt;
 		return false;
 	}
 }

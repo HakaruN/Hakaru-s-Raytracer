@@ -1,5 +1,9 @@
-﻿  Application.cpp
-c:\program files (x86)\windows kits\10\include\10.0.17134.0\shared\minwindef.h(130): warning C4005: 'APIENTRY': macro redefinition
-  c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\dependencies\glfw\include\glfw\glfw3.h(104): note: see previous definition of 'APIENTRY'
-c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\application.cpp(312): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+﻿  Triangle.cpp
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\vector.h(57): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\vector.h(69): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  Sphere.cpp
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\vector.h(57): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\vector.h(69): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\sphere.cpp(72): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
   Raytracer.vcxproj -> C:\Users\Hakaru\Documents\Programming\GitClones\Hakaru'sRaytracer\x64\Debug\Raytracer.exe
