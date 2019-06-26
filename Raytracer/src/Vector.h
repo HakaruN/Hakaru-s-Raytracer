@@ -28,13 +28,12 @@ class Vector
 			//float i = (mY * v.GetZ()) + (v.GetY() * mZ);
 			//float j = -((mX * v.GetZ()) + (v.GetX() * mZ));
 			//float k = (mX * v.GetY()) + (v.GetX() * mY);
-			//return Vector(i, j, k);
 
 			float i = (mY * v.GetZ()) - (v.GetY() * mZ);
 			float j = -((mX * v.GetZ()) - (v.GetX() * mZ));
 			float k = (mX * v.GetY()) - (v.GetX() * mY);
-			return Vector(i, j, k);
 
+			return Vector(i, j, k);
 		}
 		inline float dot(Vector a)
 		{

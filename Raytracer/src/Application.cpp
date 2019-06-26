@@ -1,10 +1,9 @@
 //#pragma comment(linker, "/STACK:5000000")
 //#pragma comment(linker, "/HEAP:50000000")//reserve 50MB on the heap as the frame buffer is on the heap
-
 //includes
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <CL/cl.h>
 #include <Windows.h>
 #include <fstream>
 #include <iostream>
@@ -45,6 +44,8 @@ static double frameRate;
 
 int main(void)
 {
+
+
 	GLFWwindow* window;
 	GLFWwindow* GUIWindow;
 
@@ -147,19 +148,19 @@ int main(void)
 	cameras->reserve(cameraCount);
 
 	//Sphere* greenSphere = new Sphere(Vector(0,0,0), green, 0.5);
-	Sphere* greenSphere = new Sphere(Vector(1, 0.5, 35), green, 5);
+	Sphere* greenSphere = new Sphere(Vector(5, 0, 35), green, 5);
 	Sphere* blueSphere = new Sphere(Vector(+20, -15, 50), blue, 10);
 	Sphere* redSphere = new Sphere(Vector(+15, +15, 50), red, 1);
 	Sphere* whiteSphere = new Sphere(Vector(+15, -15, 50), white, 4);
 	Sphere* blackSphere = new Sphere(Vector(-15, 15, 50), black, 7);
 
-	Triangle* blueTriangle = new Triangle(Vector(0,0,50),blue,Vector(1, 0.5, 35),Vector(+20, -15, 50),Vector(+15, +15, 50));
+	Triangle* blueTriangle = new Triangle(Vector(0, 0, 40), blue,Vector(-2, -2, 1),Vector(2, -2, 1),Vector(0, 2, 1));
 
 	//Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-100, 0, 10),Vector(100, 0, 10),Vector(100, 0, 10));
 	
 	//renderables->push_back(blueTriangle);
 	renderables->push_back(greenSphere);
-	//renderables->push_back(blueSphere);
+	renderables->push_back(blueSphere);
 	//renderables->push_back(redSphere);
 	//renderables->push_back(whiteSphere);
 	//renderables->push_back(blackSphere);
@@ -181,7 +182,7 @@ int main(void)
 #pragma endregion
 
 	Vector camLook(0, 0, 100);
-	Vector cameraPosition(0, 0, -1);
+	Vector cameraPosition(0, 0, 0);
 
 
 	Sphere light(Vector(width, height , 50), white, 40);
@@ -199,8 +200,8 @@ int main(void)
 	float fov = 30;
 	float t = 0; 
 
-	Camera* camera = new Camera(cameraPosition, renderables->at(guiObjectIndex)->GetPos(), Vector(0, 1, 0), Maths::degToRad(55), width / height);
-	cameraPosition.SetX(5.0f); cameraPosition.SetY(5.0f); cameraPosition.SetZ(5.0f);
+	Camera* camera = new Camera(cameraPosition, renderables->at(guiObjectIndex)->GetPos(), Vector(0, 1, 0), Maths::degToRad(fov), width / height);
+	//cameraPosition.SetX(0.0f); cameraPosition.SetY(0.0f); cameraPosition.SetZ(0.0f);
 	Camera* secondaryCamera = new Camera(cameraPosition, camLook, Vector(0, 1, 0), Maths::degToRad(fov), width/height);
 
 	cameras->push_back(camera); cameras->push_back(secondaryCamera);

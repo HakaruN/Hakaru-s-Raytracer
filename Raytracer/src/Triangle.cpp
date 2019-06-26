@@ -20,9 +20,9 @@ Triangle::Triangle(Vector position, Colour colour, Vector vert1, Vector vert2, V
 	mColour = colour;
 	
 
-	maxDist = calcMaxDist();
-	Colour darkWhite(128, 128, 128);
-	Sphere mHitSphere(mPosition, darkWhite, maxDist);
+	//maxDist = calcMaxDist();
+	//Colour darkWhite(128, 128, 128);
+	//Sphere mHitSphere(mPosition, darkWhite, maxDist);
 }
 
 std::string Triangle::GetType()
@@ -50,9 +50,11 @@ void Triangle::SetPos(Vector pos)
 	mVertices[1] = mPosition + mOrigVertices[1];
 	mVertices[2] = mPosition + mOrigVertices[2];
 
+	/* hit detection based on a sphere-ray hit
 	maxDist = calcMaxDist();
 	Colour darkWhite(128, 128, 128);
 	Sphere mHitSphere(mPosition, darkWhite, maxDist);
+	*/
 
 }
 
@@ -80,56 +82,51 @@ void Triangle::SetColour(Colour colour)
 
 Vector Triangle::GetNormal(Vector point)
 {
-	return ((mVertices[2] - mVertices[0]).cross((mVertices[1] - mVertices[0]))) / (Maths::GetMagnitude((mVertices[2] - mVertices[0]).cross((mVertices[1] - mVertices[0]))));
+	return (mVertices[1] - mVertices[0]).cross(mVertices[2] - mVertices[0]);
 }
 
 bool Triangle::Intersects(Ray ray, float &t)
 {
 	float tempt = t;
-	if (1)
-	//if (mHitSphere.Intersects(ray, t))
-	{
-		Vector normalVec = Triangle::GetNormal(Vector(0, 0, 0));
-		Vector rayOrigin = ray.GetOrigin();
-		Vector rayDirection = ray.GetDirection();
 
-		//first need to calculate how far along the ray is the intersectionpoint of the plane
-		float d = normalVec.dot(mVertices[0]);
-		t = ((normalVec.dot(rayOrigin)) + d) / normalVec.dot(rayDirection);
+	Vector normalVec = Triangle::GetNormal(Vector(0, 0, 0));
+	Vector rayOrigin = ray.GetOrigin();
+	Vector rayDirection = ray.GetDirection();
 
-		if (t < 0)
-			return false;//triangle is behind camera
+	//first need to calculate how far along the ray is the intersectionpoint of the plane
+	float d = normalVec.dot(mVertices[0]);
+	t = ((normalVec.dot(rayOrigin)) + d) / normalVec.dot(rayDirection);
+
+	/*
+	if (t < 0)
+		//std::cout << "Triangle behind camera" << std::endl;
+		return false;//triangle is behind camera
+	*/
+
+	//compute intersection point using the ray formula
+	Vector p = rayOrigin + (rayDirection * t);
 
 
-		//compute intersection point using the ray formula
-		Vector p = rayOrigin + (rayDirection * t);
-
-
-		//inside out test
-		Vector edge0 = mVertices[1] - mVertices[0];
-		Vector vp0 = p - mVertices[0];
-		Vector c = edge0.cross(vp0);
-		if (normalVec.dot(c) < 0)
-			return false;
-
-		Vector edge1 = mVertices[2] - mVertices[1];
-		Vector vp1 = p - mVertices[1];
-		c = edge1.cross(vp1);
-		if (normalVec.dot(c) < 0)
-			return false;
-
-		Vector edge3 = mVertices[0] - mVertices[2];
-		Vector vp2 = p - mVertices[2];
-		c = edge3.cross(vp2);
-		if (normalVec.dot(c) < 0)
-			return false;
-
-		return true;
-	}
-	else
-	{
+	//inside out test
+	Vector edge0 = mVertices[1] - mVertices[0];
+	Vector vp0 = p - mVertices[0];
+	Vector c = edge0.cross(vp0);
+	if (normalVec.dot(c) < 0)
 		return false;
-	}
+
+	Vector edge1 = mVertices[2] - mVertices[1];
+	Vector vp1 = p - mVertices[1];
+	c = edge1.cross(vp1);
+	if (normalVec.dot(c) < 0)
+		return false;
+
+	Vector edge3 = mVertices[0] - mVertices[2];
+	Vector vp2 = p - mVertices[2];
+	c = edge3.cross(vp2);
+	if (normalVec.dot(c) < 0)
+		return false;
+
+	return true;
 }
 
 float Triangle::GetViewableArea(Vector toCamera) {
