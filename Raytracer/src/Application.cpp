@@ -30,7 +30,7 @@
 	#define OS_TYPE windows64
 #endif
 
-void render(int width, int height, double fov, float* frameBuffer, float* depthBuffer, Colour& background, Sphere light, std::vector<Renderable*>* renderables, Camera& camera, float guiVerti, float guiHoriz,float guiDist, int guiObjectIndex, bool isCheckerboarding, bool perspective, bool multithreaded);
+void render(int width, int height, int coloursPerPixel, double fov, float* frameBuffer, bool renderingDepthBuffer, Colour& background, Sphere light, std::vector<Renderable*>* renderables, Camera& camera, float guiVerti, float guiHoriz,float guiDist, int guiObjectIndex, bool isCheckerboarding, bool perspective, bool multithreaded);
 
 Colour white(255, 255, 255);
 Colour darkWhite(128, 128, 128);
@@ -70,15 +70,14 @@ int main(void)
 	if (!glfwInit())
 		return -1;
 	 
-	const int width = 600;
+	const int width = 800;
 	const int height = 600;
 
 	const int GUIWidth = 500;
 	const int GUIHeight = 500;
-	const int colours = 4;//number of colours per pixel
 
-	float* frameBuffer = new float[width * height * colours];
-	float* depthBuffer = new float[width * height * colours];
+	const int coloursPerPixel = 3;//number of colours per pixel
+	float* frameBuffer = new float[width * height * coloursPerPixel];
 
 
 	const unsigned int n = width * height;
@@ -90,18 +89,24 @@ int main(void)
 		glfwTerminate();
 		return -1;
 	}
+
 	glfwMakeContextCurrent(window);//makes the rendering window the current window
 	if (glewInit() != GLEW_OK)
 		return -1;
+
+
 	GUIWindow = glfwCreateWindow(GUIWidth, GUIHeight, "GUI", NULL, NULL);//creates the window using openGL for the GUI
 	if (!GUIWindow)
 	{
 		glfwTerminate();
 		return -1;
 	}
+
 	glfwMakeContextCurrent(GUIWindow);//makes the GUI window the current window
 	if (glewInit() != GLEW_OK)
 		return -1;
+
+
 	glfwMakeContextCurrent(NULL);//makes no window the current window
 #pragma endregion		
 
@@ -111,19 +116,20 @@ int main(void)
 	std::vector<Renderable*>* renderables = new std::vector<Renderable*>;
 	renderables->reserve(renderablesCount);
 
-	Sphere* greenSphere = new Sphere(Vector(0,0,0), green, 0.5);
+	//Sphere* greenSphere = new Sphere(Vector(0,0,0), green, 0.5);
+	Sphere* greenSphere = new Sphere(Vector(1, 0.5, 35), green, 0.5);
 	Sphere* blueSphere = new Sphere(Vector(+15, +15, 50), blue, 10);
-	Sphere* redSphere = new Sphere(Vector(-15, -15, 50), red, 1);
+	Sphere* redSphere = new Sphere(Vector(-15, -15, -50), red, 1);
 	Sphere* whiteSphere = new Sphere(Vector(+15, -15, 50), white, 4);
 	Sphere* blackSphere = new Sphere(Vector(-15, 15, 50), black, 7);
 
-	Triangle* blueTriangle = new Triangle(Vector(0,0,0),blue,Vector(-1, 0, 50),Vector(1, +0, 50),Vector(0, +0.5, 50));
+	Triangle* blueTriangle = new Triangle(Vector(0,0,0),blue,Vector(-4, 0, 50),Vector(4, +0, 50),Vector(0, +4, 50));
 
 	//Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-100, 0, 10),Vector(100, 0, 10),Vector(100, 0, 10));
 	
 	//renderables->push_back(blueTriangle);
 	renderables->push_back(greenSphere);
-	renderables->push_back(blueSphere);
+	//renderables->push_back(blueSphere);
 	//renderables->push_back(redSphere);
 	//renderables->push_back(whiteSphere);
 	//renderables->push_back(blackSphere);
@@ -166,7 +172,7 @@ int main(void)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_FLOAT, frameBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGB	, GL_FLOAT, frameBuffer);
 
 
 	//preps the render for the incoming texture 
@@ -189,16 +195,10 @@ int main(void)
 		glfwMakeContextCurrent(window);
 		//glWindowPos2i(500, 500);
 		glClear(GL_COLOR_BUFFER_BIT);
-		render(width, height, fov, frameBuffer, depthBuffer, background, light, renderables, camera, guiVerti, guiHoriz, distance, guiObjectIndex, isCheckerboarding, perspective, multithreaded);
+		render(width, height, coloursPerPixel, fov, frameBuffer, renderingDepthBuffer, background, light, renderables, camera, guiVerti, guiHoriz, distance, guiObjectIndex, isCheckerboarding, perspective, multithreaded);
 
-		if (!renderingDepthBuffer)
-		{
-			glDrawPixels(width, height, GL_RGBA, GL_FLOAT, frameBuffer);	
-		}
-		else
-		{
-			glDrawPixels(width, height, GL_RGBA, GL_FLOAT, depthBuffer);
-		}
+		glDrawPixels(width, height, GL_RGB, GL_FLOAT, frameBuffer);	
+
 
 
 		glfwSwapBuffers(window);
@@ -312,18 +312,17 @@ int main(void)
 
 
 	delete [] frameBuffer;
-	delete [] depthBuffer;
 	return 0;
 }
 
 
 
-void render(int width, int height, double fov, float* frameBuffer, float* depthBuffer, Colour& background, Sphere light, std::vector<Renderable*>* renderables, Camera& camera, float guiVerti, float guiHoriz, float guiDist, int guiObjectIndex, bool isCheckerboarding, bool perspective, bool multithreaded)
+void render(int width, int height, int coloursPerPixel, double fov, float* frameBuffer, bool renderingDepthBuffer, Colour& background, Sphere light, std::vector<Renderable*>* renderables, Camera& camera, float guiVerti, float guiHoriz, float guiDist, int guiObjectIndex, bool isCheckerboarding, bool perspective, bool multithreaded)
 {
 	renderables->at(guiObjectIndex)->SetPos(Vector(width * guiHoriz, height *guiVerti, guiDist));
 	float t = 0;
 	std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
-	RayTracer::runRayTracer(width, height, frameBuffer, depthBuffer, background, camera, light, renderables, isCheckerboarding, perspective, multithreaded);
+	RayTracer::runRayTracer(width, height, coloursPerPixel, frameBuffer, renderingDepthBuffer, background, camera, light, renderables, isCheckerboarding, perspective, multithreaded);
 
 	std::chrono::steady_clock::time_point end(std::chrono::steady_clock::now());
 	frameRate = 1 / std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();

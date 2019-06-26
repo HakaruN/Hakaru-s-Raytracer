@@ -20,6 +20,7 @@ Sphere::Sphere()
 bool Sphere::Intersects(Ray ray, float &t)
 {
 	float tempt = t;
+
 	 // Point intersection p = pos + dir * t where t = distance along the ray
 	Vector rayOrigin = ray.GetOrigin();//pos
 	Vector rayDirection = ray.GetDirection();//dir
