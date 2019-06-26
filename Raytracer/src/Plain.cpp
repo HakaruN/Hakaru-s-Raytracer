@@ -1,5 +1,9 @@
 #pragma once
-#include "Sphere.h"
+#include "Plain.h"
 #include "Vector.h"
 #include "Maths.h"
 
+Plain::Plain()
+{
+	mType = "Plain";
+}

@@ -8,6 +8,8 @@ class Triangle : public Renderable
 {	
 	public:
 		Triangle(Vector position, Colour colour,Vector vert1, Vector vert2, Vector vert3);
+
+		virtual std::string GetType() override;
 		virtual Vector GetPos() override;
 		virtual Colour GetColour() override;
 		virtual float GetViewableArea(Vector toCamera) override;

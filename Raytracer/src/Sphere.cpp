@@ -8,12 +8,14 @@
 
 Sphere::Sphere(Vector pos, Colour colour, float rad)
 {
+	mType = "Sphere";
 	mPosition = pos;
 	mRadius = rad;
 	mColour = colour;
 }
 Sphere::Sphere()
 {
+	mType = "Sphere";
 }
 
 
@@ -44,6 +46,10 @@ bool Sphere::Intersects(Ray ray, float &t)
 	}
 }
 
+std::string Sphere::GetType()
+{
+	return mType;
+}
 
 float Sphere::GetRadius()
 {

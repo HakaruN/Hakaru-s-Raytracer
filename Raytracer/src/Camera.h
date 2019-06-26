@@ -10,6 +10,7 @@ public:
 	Vector mForwards;
 	Vector mUp;
 	Vector mRight;
+	Vector camLook;
 	double mWidth, mHeight;
 	double maspectRatio;
 private:

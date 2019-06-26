@@ -10,7 +10,7 @@ public:
 	Plain(Vector pos, Colour colour, Vector point1, Vector point2, Vector point3, Vector point4);
 	Plain();
 
-	virtual inline bool Intersects(Ray ray, float &t) override;
+	//virtual inline bool Intersects(Ray ray, float &t) override;
 
 private:
 

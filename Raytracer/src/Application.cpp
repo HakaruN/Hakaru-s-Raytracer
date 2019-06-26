@@ -1,14 +1,20 @@
 //#pragma comment(linker, "/STACK:5000000")
-#pragma comment(linker, "/HEAP:10000000")//reserve 10MB on the heap as the frame buffer is on the heap
+//#pragma comment(linker, "/HEAP:50000000")//reserve 50MB on the heap as the frame buffer is on the heap
+
+//includes
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
+#include <CL/cl.h>
 #include <Windows.h>
+#include <fstream>
+#include <iostream>
 #include <iostream>
 #include <fstream>
 #include <chrono>
 #include <thread>
 #include <vector>
+#include <string>
+
 #include "Colour.h"
 #include "Ray.h"
 #include "Sphere.h"
@@ -22,15 +28,8 @@
 #include "vendor\imgui\imgui_impl_glfw.h"
 #include "vendor\imgui\imgui_impl_opengl3.h"
 
-#if defined (__linux__)
-	#define OS_TYPE linux
-#endif
-
-#if defined (_WIN64)
-	#define OS_TYPE windows64
-#endif
-
-void render(int width, int height, int coloursPerPixel, double fov, float* frameBuffer, bool renderingDepthBuffer, Colour& background, Sphere light, std::vector<Renderable*>* renderables, Camera& camera, float guiVerti, float guiHoriz,float guiDist, int guiObjectIndex, bool isCheckerboarding, bool perspective, bool multithreaded);
+//prototyping the render function
+void render(int width, int height, int coloursPerPixel, double fov, float* frameBuffer, bool renderingDepthBuffer, Colour& background, Sphere light, std::vector<Renderable*>* renderables, std::vector<Camera*>* cameras, int cameraIndex , float guiVerti, float guiHoriz, float guiDist, int guiObjectIndex, bool isCheckerboarding, bool perspective, bool multithreaded);
 
 Colour white(255, 255, 255);
 Colour darkWhite(128, 128, 128);
@@ -43,8 +42,6 @@ Colour background(15, 15, 15);
 static float hsvColour[3];
 static float rgbColour[3] = { 0.7f, 0.5f, 0.7f };
 static double frameRate;
-
-
 
 int main(void)
 {
@@ -69,7 +66,10 @@ int main(void)
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;
-	 
+
+#pragma region  window and framebuffer setup
+
+
 	const int width = 800;
 	const int height = 600;
 
@@ -78,9 +78,32 @@ int main(void)
 
 	const int coloursPerPixel = 3;//number of colours per pixel
 	float* frameBuffer = new float[width * height * coloursPerPixel];
+#pragma endregion
 
+#pragma region openCL
+	/*
+	cl_platform_id platform_id = NULL;
+	cl_device_id device_id = NULL;
 
-	const unsigned int n = width * height;
+	cl_uint ret_num_devices;
+	cl_uint ret_num_platforms;
+
+	cl_int ret = clGetPlatformIDs(1, &platform_id, &ret_num_platforms);
+	ret = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, 1, &device_id, &ret_num_devices);
+
+	std::cout << ret << std::endl;
+
+	//create an openCL context
+	cl_context context = clCreateContext(NULL, 1, &device_id, NULL, NULL, &ret);
+
+	//create a command queue
+	cl_command_queue command_queue = clCreateCommandQueueWithProperties(context, device_id, 0, &ret);
+
+	//makes a frame buffer on the device
+	cl_mem a_mem_obj = clCreateBuffer(context, CL_MEM_READ_WRITE,
+		width * height * coloursPerPixel * sizeof(float), NULL, &ret);
+		*/
+#pragma endregion
 
 #pragma region OpenGL window setup
 	window = glfwCreateWindow(width, height, "Render", NULL, NULL);//Creating the openGL rendering window
@@ -113,37 +136,40 @@ int main(void)
 #pragma region adding and renderable objects to the scene
 
 	const int renderablesCount = 5;
+	const unsigned short cameraCount = 5;
+
+	//declare the structure to store the renderable objects and cameras
 	std::vector<Renderable*>* renderables = new std::vector<Renderable*>;
+	std::vector<Camera*>* cameras = new std::vector<Camera*>;
+
+	//reserve some size for the renderables and cameras
 	renderables->reserve(renderablesCount);
+	cameras->reserve(cameraCount);
 
 	//Sphere* greenSphere = new Sphere(Vector(0,0,0), green, 0.5);
 	Sphere* greenSphere = new Sphere(Vector(1, 0.5, 35), green, 5);
-	Sphere* blueSphere = new Sphere(Vector(+15, +15, 50), blue, 10);
-	Sphere* redSphere = new Sphere(Vector(-15, -15, -50), red, 1);
+	Sphere* blueSphere = new Sphere(Vector(+20, -15, 50), blue, 10);
+	Sphere* redSphere = new Sphere(Vector(+15, +15, 50), red, 1);
 	Sphere* whiteSphere = new Sphere(Vector(+15, -15, 50), white, 4);
 	Sphere* blackSphere = new Sphere(Vector(-15, 15, 50), black, 7);
 
-	Triangle* blueTriangle = new Triangle(Vector(0,0,0),blue,Vector(00, 0, 50),Vector(40, +0, 50),Vector(0, +40, 50));
+	Triangle* blueTriangle = new Triangle(Vector(0,0,50),blue,Vector(1, 0.5, 35),Vector(+20, -15, 50),Vector(+15, +15, 50));
 
 	//Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-100, 0, 10),Vector(100, 0, 10),Vector(100, 0, 10));
 	
 	//renderables->push_back(blueTriangle);
 	renderables->push_back(greenSphere);
-	renderables->push_back(blueSphere);
+	//renderables->push_back(blueSphere);
 	//renderables->push_back(redSphere);
 	//renderables->push_back(whiteSphere);
 	//renderables->push_back(blackSphere);
+
+
+
+
 #pragma endregion
 
-
-
-	Vector camLook(0, 0, 100);
-	Vector cameraPosition(0, 0, -1);
-
-
-	Sphere light(Vector(width, height , 50), white, 40);
-	bool guiOpen = true;
-
+#pragma region imGUI setup
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	ImGui::StyleColorsDark();
@@ -152,8 +178,18 @@ int main(void)
 	const char* glsl_version = "#version 130";
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
+#pragma endregion
+
+	Vector camLook(0, 0, 100);
+	Vector cameraPosition(0, 0, -1);
+
+
+	Sphere light(Vector(width, height , 50), white, 40);
+	bool guiOpen = true;
+
 	static int guiObjectIndex = 0;
-	Camera camera(cameraPosition, renderables->at(guiObjectIndex)->GetPos() , Vector(0,1,0), Maths::degToRad(55), width/height);
+	static int guiCameraIndex = 0;
+
 
 	static float guiVerti = 0.0f;
 	static float guiHoriz = 0.0f;
@@ -162,6 +198,12 @@ int main(void)
 	static float distance = (renderables->at(guiObjectIndex)->GetPos() - cameraPosition).getMagnitude();
 	float fov = 30;
 	float t = 0; 
+
+	Camera* camera = new Camera(cameraPosition, renderables->at(guiObjectIndex)->GetPos(), Vector(0, 1, 0), Maths::degToRad(55), width / height);
+	cameraPosition.SetX(5.0f); cameraPosition.SetY(5.0f); cameraPosition.SetZ(5.0f);
+	Camera* secondaryCamera = new Camera(cameraPosition, camLook, Vector(0, 1, 0), Maths::degToRad(fov), width/height);
+
+	cameras->push_back(camera); cameras->push_back(secondaryCamera);
 
 #pragma region TODO: add rendering to texture for the rendermethod instead of glDrawPixels
 	//texture setup for the cpu-gpu framebuffer passover
@@ -185,6 +227,7 @@ int main(void)
 	float camPosX = 0;
 	float camPosY = 0;
 	float camPosZ = 0;
+
 	while (!glfwWindowShouldClose(window) || !glfwWindowShouldClose(GUIWindow))
 	{
 		float tempFov = fov;
@@ -196,11 +239,9 @@ int main(void)
 		glfwMakeContextCurrent(window);
 		//glWindowPos2i(500, 500);
 		glClear(GL_COLOR_BUFFER_BIT);
-		render(width, height, coloursPerPixel, fov, frameBuffer, renderingDepthBuffer, background, light, renderables, camera, guiVerti, guiHoriz, distance, guiObjectIndex, isCheckerboarding, perspective, multithreaded);
+		render(width, height, coloursPerPixel, fov, frameBuffer, renderingDepthBuffer, background, light, renderables, cameras, guiCameraIndex, guiVerti, guiHoriz, distance, guiObjectIndex, isCheckerboarding, perspective, multithreaded);
 
 		glDrawPixels(width, height, GL_RGB, GL_FLOAT, frameBuffer);	
-
-
 
 		glfwSwapBuffers(window);
 
@@ -209,7 +250,6 @@ int main(void)
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-
 
 		///Object manipulation
 		{
@@ -228,6 +268,7 @@ int main(void)
 			ImGui::SliderInt("object select", &guiObjectIndex, 0, (int)renderables->size() - 1);
 			
 			ImGui::Text("Camera pos: %f,%f,%f", cameraPosition.GetX(), cameraPosition.GetY(), cameraPosition.GetZ());
+			//ImGui::Text("Object type: %", renderables->at(guiObjectIndex)->GetType());
 			ImGui::Text("Object pos: %f,%f,%f", renderables->at(guiObjectIndex)->GetPos().GetX(), renderables->at(guiObjectIndex)->GetPos().GetY(), renderables->at(guiObjectIndex)->GetPos().GetZ());
 			
 			//if (ImGui::Button("Button"))// Buttons return true when clicked (most widgets return true when edited/activated)
@@ -266,12 +307,15 @@ int main(void)
 		///camera controls
 		{//window for render controls
 			ImGui::Begin("Camera Controls");
+
+			ImGui::SliderInt("Camera select: ", &guiCameraIndex, 0, cameras->size()-1);
 			ImGui::SliderFloat("FOV", &tempFov, 5.0f, 90.0f);
 
 			ImGui::SliderFloat("Cam-X", &camPosX, -30, 30);
 			ImGui::SliderFloat("Cam-Y", &camPosY, -30, 30);
 			ImGui::SliderFloat("Cam-Z", &camPosZ, -4, 150);
 			ImGui::Checkbox("Free look", &freeCam);
+
 			camLook.SetX(camPosX);
 			camLook.SetY(camPosY);
 			camLook.SetZ(camPosZ);
@@ -285,13 +329,15 @@ int main(void)
 			ImGui::End();
 		}
 
+
 		fov = tempFov;
+
 		if (freeCam)
 		{
 			cameraPosition.SetX(camPosX);
 			cameraPosition.SetY(camPosY);
 			cameraPosition.SetZ(camPosZ);
-			camera.update(cameraPosition, Vector(0,0, cameraPosition.GetZ()+1), Vector(0, 1, 0), Maths::degToRad(fov), (float)width / (float)height);
+			cameras->at(guiCameraIndex)->update(cameraPosition, Vector(0, 0, cameraPosition.GetZ() + 1), Vector(0, 1, 0), Maths::degToRad(fov), (float)width / (float)height);
 		}
 		else
 		{
@@ -299,7 +345,7 @@ int main(void)
 			//Vector::vectorBetweenVectors(renderables->at(guiObjectIndex)->GetPos(), cameraPosition);
 			//renderables->at(guiObjectIndex)->GetPos();
 
-			camera.update(cameraPosition, Vector::vectorBetweenVectors(renderables->at(guiObjectIndex)->GetPos(), Vector(camPosX, camPosY, camPosZ)), Vector(0, 1, 0), Maths::degToRad(fov), (float)width / (float)height);
+			cameras->at(guiCameraIndex)->update(cameraPosition, Vector::vectorBetweenVectors(renderables->at(guiObjectIndex)->GetPos(), Vector(camPosX, camPosY, camPosZ)), Vector(0, 1, 0), Maths::degToRad(fov), (float)width / (float)height);
 		}
 		
 
@@ -324,15 +370,11 @@ int main(void)
 	return 0;
 }
 
-
-
-void render(int width, int height, int coloursPerPixel, double fov, float* frameBuffer, bool renderingDepthBuffer, Colour& background, Sphere light, std::vector<Renderable*>* renderables, Camera& camera, float guiVerti, float guiHoriz, float guiDist, int guiObjectIndex, bool isCheckerboarding, bool perspective, bool multithreaded)
+void render(int width, int height, int coloursPerPixel, double fov, float* frameBuffer, bool renderingDepthBuffer, Colour& background, Sphere light, std::vector<Renderable*>* renderables, std::vector<Camera*>* cameras, int cameraIndex, float guiVerti, float guiHoriz, float guiDist, int guiObjectIndex, bool isCheckerboarding, bool perspective, bool multithreaded)
 {
-	//renderables->at(guiObjectIndex)->SetPos(Vector(width * guiHoriz, height *guiVerti, guiDist));
 	renderables->at(guiObjectIndex)->SetPos(Vector(guiHoriz, guiVerti, guiDist));
-	float t = 0;
 	std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());
-	RayTracer::runRayTracer(width, height, coloursPerPixel, frameBuffer, renderingDepthBuffer, background, camera, light, renderables, isCheckerboarding, perspective, multithreaded);
+	RayTracer::runRayTracer(width, height, coloursPerPixel, frameBuffer, renderingDepthBuffer, background, *cameras->at(cameraIndex), light, renderables, isCheckerboarding, perspective, multithreaded);
 
 	std::chrono::steady_clock::time_point end(std::chrono::steady_clock::now());
 	frameRate = 1 / std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count();

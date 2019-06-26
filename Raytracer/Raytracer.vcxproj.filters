@@ -122,5 +122,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Hakaru%27sRaytracer\Raytracer\imgui.ini" />
+    <None Include="..\..\Hakaru%27sRaytracer\Raytracer\src\HelloWorld.cl" />
   </ItemGroup>
 </Project>

@@ -16,6 +16,7 @@ class Sphere : public Renderable
 		virtual float getSize() override;
 		
 		float GetRadius();
+		virtual std::string GetType() override;
 		virtual Vector GetNormal(Vector point) override;
 		virtual Vector GetPos() override;
 		virtual Colour GetColour() override;

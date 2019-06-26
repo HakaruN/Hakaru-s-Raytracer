@@ -8,6 +8,7 @@
 
 Triangle::Triangle(Vector position, Colour colour, Vector vert1, Vector vert2, Vector vert3)
 {
+	mType = "Triangle";
 	mPosition = position;
 	
 	mOrigVertices[0] = vert1;
@@ -24,6 +25,10 @@ Triangle::Triangle(Vector position, Colour colour, Vector vert1, Vector vert2, V
 	Sphere mHitSphere(mPosition, darkWhite, maxDist);
 }
 
+std::string Triangle::GetType()
+{
+	return mType;
+}
 Colour Triangle::GetColour()
 {
 	return mColour;
