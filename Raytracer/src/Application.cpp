@@ -16,10 +16,13 @@
 
 #include "Colour.h"
 #include "Ray.h"
-#include "Sphere.h"
 #include "Maths.h"
 #include "RayTracer.h"
+
+#include "Sphere.h"
 #include "Triangle.h"
+#include "Plain.h"
+
 #include "Renderable.h"
 #include "Camera.h"
 
@@ -157,6 +160,10 @@ int main(void)
 	Triangle* blueTriangle = new Triangle(Vector(0, 0, 40), blue,Vector(-2, -2, 1),Vector(2, -2, 1),Vector(0, 2, 1));
 	Triangle* greenTriangle = new Triangle(Vector(0, 0, 40), green, Vector(-2, -2, 1), Vector(2, -2, 1), Vector(0, 2, 1));
 
+	Plain* redPlain = new Plain(Vector(0,0,100), red, Vector(-2, -2, 1), Vector(2, -2, 1), Vector(2, 2, 100), Vector(-2, 2, 100));
+
+
+
 	//Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-100, 0, 10),Vector(100, 0, 10),Vector(100, 0, 10));
 	
 	//renderables->push_back(blueTriangle);
@@ -166,6 +173,8 @@ int main(void)
 	//renderables->push_back(redSphere);
 	//renderables->push_back(whiteSphere);
 	//renderables->push_back(blackSphere);
+
+	renderables->push_back(redPlain);
 
 
 

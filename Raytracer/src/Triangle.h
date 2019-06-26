@@ -17,10 +17,10 @@ class Triangle : public Renderable
 
 		virtual void SetPos(Vector pos) override;
 		virtual void SetColour(Colour colour) override;
+		virtual inline void setSize(float rad) override;
 
 		virtual inline bool Intersects(Ray ray, float &t) override;
 		virtual Vector GetNormal(Vector point) override;
-		virtual inline void setSize(float rad) override;
 
 		float inline calcMaxDist();
 

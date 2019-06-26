@@ -1,9 +1,4 @@
-﻿  Triangle.cpp
+﻿  Plain.cpp
 c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\vector.h(57): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
 c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\vector.h(69): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-  Sphere.cpp
-c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\vector.h(57): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\vector.h(69): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\sphere.cpp(72): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-  Generating Code...
   Raytracer.vcxproj -> C:\Users\Hakaru\Documents\Programming\GitClones\Hakaru'sRaytracer\x64\Debug\Raytracer.exe

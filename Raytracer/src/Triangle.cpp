@@ -79,6 +79,10 @@ void Triangle::SetColour(Colour colour)
 {
 	mColour = colour;
 }
+void Triangle::setSize(float rad)
+{
+	
+}
 
 Vector Triangle::GetNormal(Vector point)
 {
@@ -143,9 +147,4 @@ bool Triangle::Intersects(Ray ray, float &t)
 
 float Triangle::GetViewableArea(Vector toCamera) {
 	return 0;
-}
-
-void Triangle::setSize(float rad)
-{
-	
 }
