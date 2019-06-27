@@ -158,23 +158,23 @@ int main(void)
 	Sphere* blackSphere = new Sphere(Vector(-15, 15, 50), black, 7);
 
 	Triangle* blueTriangle = new Triangle(Vector(0, 0, 40), blue,Vector(-2, -2, 1),Vector(2, -2, 1),Vector(0, 2, 1));
-	Triangle* greenTriangle = new Triangle(Vector(0, 0, 40), green, Vector(-2, -2, 1), Vector(2, -2, 1), Vector(0, 2, 1));
+	Triangle* greenTriangle = new Triangle(Vector(0, 15, 60), green, Vector(-4, -4, 1), Vector(4, -4, 1), Vector(0, 4, 1));
 
-	Plain* redPlain = new Plain(Vector(0,0,100), red, Vector(-2, -2, 1), Vector(2, -2, 1), Vector(2, 2, 100), Vector(-2, 2, 100));
-
+	Plain* redPlain = new Plain(Vector(0,1.22,0), red, Vector(-2, -2, 1), Vector(2, -2, 1), Vector(2, 2, 100), Vector(-2, 2, 100));
 
 
 	//Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-100, 0, 10),Vector(100, 0, 10),Vector(100, 0, 10));
 	
 	//renderables->push_back(blueTriangle);
-	renderables->push_back(greenTriangle);
-	//renderables->push_back(greenSphere);
+	//renderables->push_back(greenTriangle);
+
+	renderables->push_back(greenSphere);
 	renderables->push_back(blueSphere);
 	//renderables->push_back(redSphere);
 	//renderables->push_back(whiteSphere);
 	//renderables->push_back(blackSphere);
 
-	renderables->push_back(redPlain);
+	//renderables->push_back(redPlain);
 
 
 
@@ -263,13 +263,42 @@ int main(void)
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
+
+		///camera controls
+		{//window for render controls
+			ImGui::Begin("Camera Controls");
+
+			ImGui::SliderInt("Camera select: ", &guiCameraIndex, 0, cameras->size() - 1);
+
+			camPosX = cameras->at(guiCameraIndex)->mOrigin.GetX();
+			camPosY = cameras->at(guiCameraIndex)->mOrigin.GetY();
+			camPosZ = cameras->at(guiCameraIndex)->mOrigin.GetZ();
+
+			ImGui::SliderFloat("FOV", &tempFov, 5.0f, 90.0f);
+
+			ImGui::SliderFloat("Cam-X", &camPosX, -5, 5);
+			ImGui::SliderFloat("Cam-Y", &camPosY, -5, 5);
+			ImGui::SliderFloat("Cam-Z", &camPosZ, -4, 150);
+			ImGui::Checkbox("Free look", &freeCam);
+
+			//camLook.SetX(camPosX);
+			//camLook.SetY(camPosY);
+			//camLook.SetZ(camPosZ);
+			ImGui::End();
+		}
 		///Object manipulation
 		{
 			//static int counter = 0;
 
 			ImGui::Begin("Objects");                          // Create a window called "Hello, world!" and append into it.
 
-			//ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+			ImGui::SliderInt("object select", &guiObjectIndex, 0, (int)renderables->size() - 1);
+
+			guiHoriz = renderables->at(guiObjectIndex)->GetPos().GetX();
+			guiVerti = renderables->at(guiObjectIndex)->GetPos().GetY();
+			distance = renderables->at(guiObjectIndex)->GetPos().GetZ();
+			guiSize = renderables->at(guiObjectIndex)->getSize();
+
 
 			ImGui::SliderFloat("Vertical", &guiVerti, -50.0f, 50.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
 			ImGui::SliderFloat("Horisontal", &guiHoriz, -50.0f, 50.0f);
@@ -277,7 +306,7 @@ int main(void)
 			ImGui::SliderFloat("Distance", &distance, 0.0f, 100.0f);
 			ImGui::SliderFloat("Size", &guiSize, 0.0f, 100.0f);
 
-			ImGui::SliderInt("object select", &guiObjectIndex, 0, (int)renderables->size() - 1);
+
 			
 			ImGui::Text("Camera pos: %f,%f,%f", cameraPosition.GetX(), cameraPosition.GetY(), cameraPosition.GetZ());
 			//ImGui::Text("Object type: %", renderables->at(guiObjectIndex)->GetType());
@@ -316,23 +345,6 @@ int main(void)
 			ImGui::Checkbox("Render depthBuffer", &renderingDepthBuffer);
 			ImGui::End();
 		}
-		///camera controls
-		{//window for render controls
-			ImGui::Begin("Camera Controls");
-
-			ImGui::SliderInt("Camera select: ", &guiCameraIndex, 0, cameras->size()-1);
-			ImGui::SliderFloat("FOV", &tempFov, 5.0f, 90.0f);
-
-			ImGui::SliderFloat("Cam-X", &camPosX, -30, 30);
-			ImGui::SliderFloat("Cam-Y", &camPosY, -30, 30);
-			ImGui::SliderFloat("Cam-Z", &camPosZ, -4, 150);
-			ImGui::Checkbox("Free look", &freeCam);
-
-			camLook.SetX(camPosX);
-			camLook.SetY(camPosY);
-			camLook.SetZ(camPosZ);
-			ImGui::End();
-		}
 		///light controls
 		{
 			ImGui::Begin("Light controls");
@@ -344,11 +356,14 @@ int main(void)
 
 		fov = tempFov;
 
+		cameraPosition.SetX(camPosX);
+		cameraPosition.SetY(camPosY);
+		cameraPosition.SetZ(camPosZ);
+
 		if (freeCam)
 		{
-			cameraPosition.SetX(camPosX);
-			cameraPosition.SetY(camPosY);
-			cameraPosition.SetZ(camPosZ);
+
+
 			cameras->at(guiCameraIndex)->update(cameraPosition, Vector(0, 0, cameraPosition.GetZ() + 1), Vector(0, 1, 0), Maths::degToRad(fov), (float)width / (float)height);
 		}
 		else
@@ -369,16 +384,43 @@ int main(void)
 	}
 
 
+
+
+
+#pragma region cleanup
+
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 
 
-	//glDeleteTextures(1, &renderTexture);
+	glDeleteTextures(1, &renderTexture);
 	glfwTerminate();
 
 
-	delete [] frameBuffer;
+	delete[] frameBuffer;
+
+
+	delete renderables;
+	delete cameras;
+
+	delete greenSphere;
+	delete blueSphere;
+	delete redSphere;
+	delete whiteSphere;
+	delete blackSphere;
+
+	delete blueTriangle;
+	delete greenTriangle;
+
+	delete redPlain;
+
+	delete camera;
+	delete secondaryCamera;
+#pragma endregion
+
+
+
 	return 0;
 }
 
