@@ -1,10 +1,12 @@
-#include "Camera.h"
 #include <math.h>
+#include "Maths.h"
+#include "Camera.h"
 #include "Vector.h"
 
 Camera::Camera(Vector origin, Vector target, Vector upGuide, double fov, double aspectRatio)
 {
 	//mForwards = Vector::vectorBetweenVectors(target, mOrigin);
+	mFov = fov;
 	mOrigin = origin;
 	mForwards = (target - origin).Normalise();
 	mRight = mForwards.cross(upGuide).Normalise();
@@ -12,13 +14,14 @@ Camera::Camera(Vector origin, Vector target, Vector upGuide, double fov, double 
 
 	maspectRatio = aspectRatio;
 
-	mHeight = tan(fov);
+	mHeight = tan(Maths::degToRad(mFov));
 	mWidth = mHeight * maspectRatio;
 }
 
 
 void Camera::update(Vector origin, Vector target, Vector upGuide, double fov, double aspectRatio)
 {
+	mFov = fov;
 	mOrigin = origin;
 	mForwards = (target - origin).Normalise();
 	mRight = mForwards.cross(upGuide).Normalise();
@@ -26,6 +29,6 @@ void Camera::update(Vector origin, Vector target, Vector upGuide, double fov, do
 
 	maspectRatio = aspectRatio;
 
-	mHeight = tan(fov);
+	mHeight = tan( Maths::degToRad(mFov));
 	mWidth = mHeight * maspectRatio;
 }

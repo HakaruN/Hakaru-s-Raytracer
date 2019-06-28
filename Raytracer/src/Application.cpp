@@ -42,7 +42,8 @@ Colour blue(0, 0, 255);
 Colour background(15, 15, 15);
 
 static float hsvColour[3];
-static float rgbColour[3] = { 0.7f, 0.5f, 0.7f };
+static float rgbBackgroundColour[3] = { 0.7f, 0.5f, 0.7f };
+static float rgbObjectColour[3];
 static double frameRate;
 
 int main(void)
@@ -62,9 +63,9 @@ int main(void)
 
 	//background colouring
 	ImVec4 clear_colour = ImVec4(0.0468f, 0.0468f, 0.0635f, 1.00f);
-	rgbColour[0] = clear_colour.x;
-	rgbColour[1] = clear_colour.y;
-	rgbColour[2] = clear_colour.z;
+	rgbBackgroundColour[0] = clear_colour.x;
+	rgbBackgroundColour[1] = clear_colour.y;
+	rgbBackgroundColour[2] = clear_colour.z;
 
 
 	/* Initialize the library */
@@ -74,8 +75,8 @@ int main(void)
 #pragma region  window and framebuffer setup
 
 
-	const int width = 800;
-	const int height = 600;
+	const int width = 1920;
+	const int height = 1080;
 
 	const int GUIWidth = 500;
 	const int GUIHeight = 500;
@@ -150,8 +151,8 @@ int main(void)
 	renderables->reserve(renderablesCount);
 	cameras->reserve(cameraCount);
 
-	//Sphere* greenSphere = new Sphere(Vector(0,0,0), green, 0.5);
-	Sphere* greenSphere = new Sphere(Vector(5, 0, 35), green, 5);
+	Sphere* greenSphere = new Sphere(Vector(1, 0.5, 35), green, 0.5);
+	//Sphere* greenSphere = new Sphere(Vector(5, 0, 35), green, 5);
 	Sphere* blueSphere = new Sphere(Vector(+20, -15, 50), blue, 10);
 	Sphere* redSphere = new Sphere(Vector(+15, +15, 50), red, 1);
 	Sphere* whiteSphere = new Sphere(Vector(+15, -15, 50), white, 4);
@@ -165,16 +166,16 @@ int main(void)
 
 	//Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-100, 0, 10),Vector(100, 0, 10),Vector(100, 0, 10));
 	
-	//renderables->push_back(blueTriangle);
-	//renderables->push_back(greenTriangle);
+	renderables->push_back(blueTriangle);
+	renderables->push_back(greenTriangle);
 
 	renderables->push_back(greenSphere);
 	renderables->push_back(blueSphere);
-	//renderables->push_back(redSphere);
+	renderables->push_back(redSphere);
 	//renderables->push_back(whiteSphere);
 	//renderables->push_back(blackSphere);
 
-	//renderables->push_back(redPlain);
+	renderables->push_back(redPlain);
 
 
 
@@ -210,6 +211,7 @@ int main(void)
 	static float distance = (renderables->at(guiObjectIndex)->GetPos() - cameraPosition).getMagnitude();
 	float fov = 30;
 	float t = 0; 
+
 
 	Camera* camera = new Camera(cameraPosition, renderables->at(guiObjectIndex)->GetPos(), Vector(0, 1, 0), Maths::degToRad(fov), width / height);
 	//cameraPosition.SetX(0.0f); cameraPosition.SetY(0.0f); cameraPosition.SetZ(0.0f);
@@ -274,6 +276,8 @@ int main(void)
 			camPosY = cameras->at(guiCameraIndex)->mOrigin.GetY();
 			camPosZ = cameras->at(guiCameraIndex)->mOrigin.GetZ();
 
+			tempFov = cameras->at(guiCameraIndex)->mFov;
+
 			ImGui::SliderFloat("FOV", &tempFov, 5.0f, 90.0f);
 
 			ImGui::SliderFloat("Cam-X", &camPosX, -5, 5);
@@ -323,10 +327,32 @@ int main(void)
 		///background colour
 		{
 			ImGui::Begin("Background");
-			ImGui::ColorPicker3("Background Colour", rgbColour);
-			background.SetRed(rgbColour[0]);
-			background.SetGreen(rgbColour[1]);
-			background.SetBlue(rgbColour[2]);
+			ImGui::ColorPicker3("Background Colour", rgbBackgroundColour);
+			background.SetRed(rgbBackgroundColour[0]);
+			background.SetGreen(rgbBackgroundColour[1]);
+			background.SetBlue(rgbBackgroundColour[2]);
+
+			ImGui::End();
+		}
+		///object colour
+		{
+			ImGui::Begin("Object");
+
+			//setting the colour picker
+			rgbObjectColour[0] = renderables->at(guiObjectIndex)->GetColour().GetRed()/ 255;
+			//std::cout << "Red " << renderables->at(guiObjectIndex)->GetColour().GetRed() << std::endl;
+			rgbObjectColour[1] = renderables->at(guiObjectIndex)->GetColour().GetGreen() / 255;
+			//std::cout << "Green " << renderables->at(guiObjectIndex)->GetColour().GetGreen() << std::endl;
+			rgbObjectColour[2] = renderables->at(guiObjectIndex)->GetColour().GetBlue() / 255;
+			//std::cout << "Blue " << renderables->at(guiObjectIndex)->GetColour().GetBlue() << std::endl;
+
+			//adjust the colour picker
+			ImGui::ColorPicker3("Object Colour", rgbObjectColour);
+
+			//set the objects colour
+			Colour colour(rgbObjectColour[0] * 255, rgbObjectColour[1] * 255, rgbObjectColour[2] * 255);
+			//std::cout << "Red: " << rgbObjectColour[0] << "Green: " << rgbObjectColour[1] << "Blue: " << rgbObjectColour[2] << std::endl;
+			renderables->at(guiObjectIndex)->SetColour(colour);
 
 			ImGui::End();
 		}
@@ -362,9 +388,7 @@ int main(void)
 
 		if (freeCam)
 		{
-
-
-			cameras->at(guiCameraIndex)->update(cameraPosition, Vector(0, 0, cameraPosition.GetZ() + 1), Vector(0, 1, 0), Maths::degToRad(fov), (float)width / (float)height);
+			cameras->at(guiCameraIndex)->update(cameraPosition, Vector(0, 0, cameraPosition.GetZ() + 1), Vector(0, 1, 0), fov, (float)width / (float)height);
 		}
 		else
 		{
@@ -372,7 +396,7 @@ int main(void)
 			//Vector::vectorBetweenVectors(renderables->at(guiObjectIndex)->GetPos(), cameraPosition);
 			//renderables->at(guiObjectIndex)->GetPos();
 
-			cameras->at(guiCameraIndex)->update(cameraPosition, Vector::vectorBetweenVectors(renderables->at(guiObjectIndex)->GetPos(), Vector(camPosX, camPosY, camPosZ)), Vector(0, 1, 0), Maths::degToRad(fov), (float)width / (float)height);
+			cameras->at(guiCameraIndex)->update(cameraPosition, Vector::vectorBetweenVectors(renderables->at(guiObjectIndex)->GetPos(), Vector(camPosX, camPosY, camPosZ)), Vector(0, 1, 0), fov, (float)width / (float)height);
 		}
 		
 

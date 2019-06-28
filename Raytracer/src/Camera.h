@@ -13,5 +13,6 @@ public:
 	Vector camLook;
 	double mWidth, mHeight;
 	double maspectRatio;
+	double mFov;
 private:
 };
