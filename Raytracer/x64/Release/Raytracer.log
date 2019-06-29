@@ -1,14 +1,77 @@
-﻿  Sphere.cpp
-c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\vector.h(57): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\vector.h(69): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+﻿  RayTracer.cpp
 c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\maths.h(15): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
 c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\maths.h(16): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\sphere.cpp(75): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\raytracer.cpp(49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\raytracer.cpp(109): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\raytracer.cpp(117): warning C4305: 'initializing': truncation from '__int64' to 'float'
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\raytracer.cpp(122): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\raytracer.cpp(136): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\raytracer.cpp(143): warning C4305: 'initializing': truncation from '__int64' to 'float'
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\raytracer.cpp(148): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\raytracer.cpp(163): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\raytracer.cpp(171): warning C4305: 'initializing': truncation from '__int64' to 'float'
+c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\raytracer.cpp(176): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\type_traits(16707566): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\type_traits(16707566): note: see reference to function template instantiation 'void std::_Invoker_functor::_Call<void(__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<_Ty>> *),int,int,int,int,int,int,int,float,bool,bool,bool,float*,bool,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<_Ty,std::allocator<_Ty>>*>(_Callable &&,int &&,int &&,int &&,int &&,int &&,int &&,int &&,float &&,bool &&,bool &&,bool &&,float *&&,bool &&,std::reference_wrapper<Colour> &&,std::reference_wrapper<Camera> &&,std::reference_wrapper<Sphere> &&,std::vector<_Ty,std::allocator<_Ty>> *&&) noexcept(false)' being compiled
+          with
+          [
+              _Ty=Renderable *,
+              _Callable=void (__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<Renderable *>> *)
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\thr\xthread(237): note: see reference to function template instantiation 'void std::invoke<void(__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<_Ty>> *),int,int,int,int,int,int,int,float,bool,bool,bool,float*,bool,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<_Ty,std::allocator<_Ty>>*>(_Callable &&,int &&,int &&,int &&,int &&,int &&,int &&,int &&,float &&,bool &&,bool &&,bool &&,float *&&,bool &&,std::reference_wrapper<Colour> &&,std::reference_wrapper<Camera> &&,std::reference_wrapper<Sphere> &&,std::vector<_Ty,std::allocator<_Ty>> *&&) noexcept(false)' being compiled
+          with
+          [
+              _Ty=Renderable *,
+              _Callable=void (__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<Renderable *>> *)
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\thr\xthread(246): note: see reference to function template instantiation 'void std::_LaunchPad<_Target>::_Execute<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17>(std::tuple<void (__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<_Ty>> *),int,int,int,int,int,int,int,float,bool,bool,bool,float *,bool,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<_Ty,std::allocator<_Ty>> *> &,std::integer_sequence<unsigned __int64,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17>)' being compiled
+          with
+          [
+              _Target=std::unique_ptr<std::tuple<void (__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<Renderable *>> *),int,int,int,int,int,int,int,float,bool,bool,bool,float *,bool,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<Renderable *,std::allocator<Renderable *>> *>,std::default_delete<std::tuple<void (__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<Renderable *>> *),int,int,int,int,int,int,int,float,bool,bool,bool,float *,bool,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<Renderable *,std::allocator<Renderable *>> *>>>,
+              _Ty=Renderable *
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\thr\xthread(245): note: see reference to function template instantiation 'void std::_LaunchPad<_Target>::_Execute<0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17>(std::tuple<void (__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<_Ty>> *),int,int,int,int,int,int,int,float,bool,bool,bool,float *,bool,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<_Ty,std::allocator<_Ty>> *> &,std::integer_sequence<unsigned __int64,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17>)' being compiled
+          with
+          [
+              _Target=std::unique_ptr<std::tuple<void (__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<Renderable *>> *),int,int,int,int,int,int,int,float,bool,bool,bool,float *,bool,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<Renderable *,std::allocator<Renderable *>> *>,std::default_delete<std::tuple<void (__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<Renderable *>> *),int,int,int,int,int,int,int,float,bool,bool,bool,float *,bool,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<Renderable *,std::allocator<Renderable *>> *>>>,
+              _Ty=Renderable *
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\thr\xthread(242): note: while compiling class template member function 'void std::_LaunchPad<_Target>::_Run(std::_LaunchPad<_Target> *) noexcept'
+          with
+          [
+              _Target=std::unique_ptr<std::tuple<void (__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<Renderable *>> *),int,int,int,int,int,int,int,float,bool,bool,bool,float *,bool,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<Renderable *,std::allocator<Renderable *>> *>,std::default_delete<std::tuple<void (__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<Renderable *>> *),int,int,int,int,int,int,int,float,bool,bool,bool,float *,bool,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<Renderable *,std::allocator<Renderable *>> *>>>
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\thr\xthread(230): note: see reference to function template instantiation 'void std::_LaunchPad<_Target>::_Run(std::_LaunchPad<_Target> *) noexcept' being compiled
+          with
+          [
+              _Target=std::unique_ptr<std::tuple<void (__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<Renderable *>> *),int,int,int,int,int,int,int,float,bool,bool,bool,float *,bool,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<Renderable *,std::allocator<Renderable *>> *>,std::default_delete<std::tuple<void (__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<Renderable *>> *),int,int,int,int,int,int,int,float,bool,bool,bool,float *,bool,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<Renderable *,std::allocator<Renderable *>> *>>>
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\thr\xthread(257): note: see reference to class template instantiation 'std::_LaunchPad<_Target>' being compiled
+          with
+          [
+              _Target=std::unique_ptr<std::tuple<void (__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<Renderable *>> *),int,int,int,int,int,int,int,float,bool,bool,bool,float *,bool,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<Renderable *,std::allocator<Renderable *>> *>,std::default_delete<std::tuple<void (__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<Renderable *>> *),int,int,int,int,int,int,int,float,bool,bool,bool,float *,bool,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<Renderable *,std::allocator<Renderable *>> *>>>
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\thread(46): note: see reference to function template instantiation 'void std::_Launch<std::unique_ptr<std::tuple<void (__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<_Ty>> *),int,int,int,int,int,int,int,float,bool,bool,bool,float *,bool,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<_Ty,std::allocator<_Ty>> *>,std::default_delete<std::tuple<void (__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<_Ty,std::allocator<_Ty>> *),int,int,int,int,int,int,int,float,bool,bool,bool,float *,bool,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<_Ty,std::allocator<_Ty>> *>>>>(_Thrd_t *,_Target &&)' being compiled
+          with
+          [
+              _Ty=Renderable *,
+              _Target=std::unique_ptr<std::tuple<void (__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<Renderable *>> *),int,int,int,int,int,int,int,float,bool,bool,bool,float *,bool,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<Renderable *,std::allocator<Renderable *>> *>,std::default_delete<std::tuple<void (__cdecl *)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<Renderable *>> *),int,int,int,int,int,int,int,float,bool,bool,bool,float *,bool,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<Renderable *,std::allocator<Renderable *>> *>>>
+          ]
+  c:\users\hakaru\documents\programming\gitclones\hakaru'sraytracer\raytracer\src\raytracer.cpp(35): note: see reference to function template instantiation 'std::thread::thread<void(__cdecl &)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<_Ty>> *),int,int,int,int,int&,int&,int&,float&,bool&,bool&,bool&,float*&,bool&,std::reference_wrapper<Colour>,std::reference_wrapper<Camera>,std::reference_wrapper<Sphere>,std::vector<_Ty,std::allocator<_Ty>>*&,void>(_Fn,int &&,int &&,int &&,int &&,int &,int &,int &,float &,bool &,bool &,bool &,float *&,bool &,std::reference_wrapper<Colour> &&,std::reference_wrapper<Camera> &&,std::reference_wrapper<Sphere> &&,std::vector<_Ty,std::allocator<_Ty>> *&)' being compiled
+          with
+          [
+              _Ty=Renderable *,
+              _Fn=void (__cdecl &)(float,float,int,int,int,int,int,float,bool,bool,bool,float *,bool,Colour &,Camera &,Sphere &,std::vector<Renderable *,std::allocator<Renderable *>> *)
+          ]
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Generating code
-  1 of 1579 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+  2 of 1582 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    17 functions had inline decision re-evaluated but remain unchanged
+    21 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
 glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'C:\Users\Hakaru\Documents\Programming\GitClones\Hakaru'sRaytracer\x64\Release\vc120.pdb'; linking object as if no debug info
   Raytracer.vcxproj -> C:\Users\Hakaru\Documents\Programming\GitClones\Hakaru'sRaytracer\x64\Release\Raytracer.exe

@@ -1,11 +1,12 @@
 #pragma once
 #include "Vector.h"
 #include "Colour.h"
+#include "Fragment.h"
 #include <string>
 class Renderable//abstract class for the renderable objects to inherit from
 {
 	public:
-		virtual bool Intersects(Ray ray, float &t) = 0;
+		virtual bool Intersects(Fragment& fragment) = 0;
 		virtual void SetPos(Vector pos) = 0;
 		virtual void SetColour(Colour colour) = 0;
 

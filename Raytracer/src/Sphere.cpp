@@ -19,14 +19,56 @@ Sphere::Sphere()
 }
 
 
-bool Sphere::Intersects(Ray ray, float &t)
+bool Sphere::Intersects(Fragment& fragment)
 {
+	
+	// https://www.youtube.com/watch?v=HFPlKQGChpE //how to do the intersection	
+	float tempT = fragment.getT();//This stores the current value of t just incase the old value is close to the camera than the one we'll calculate next
 
+	Vector rayOrigin = fragment.getRay().GetOrigin();//point the ray is fired from
+	Vector rayDirection = fragment.getRay().GetDirection();
+
+	Vector OriginToSphereCentre = mPosition - rayOrigin;//Vector to the centre of the sphere from the rays origin
+
+	fragment.setT( Maths::dot(OriginToSphereCentre, rayDirection));// this t is the point such that the vector to the sphere centre is perpendicular to the ray
+
+	float y = (mPosition - (rayOrigin + (rayDirection * fragment.getT()))).getMagnitude();//y value in the equation of a circle.
+
+	if (y < mRadius)
+	{
+		float x = sqrt(mRadius * mRadius - y*y);
+
+		float t1 = fragment.getT() - x; float t2 = fragment.getT() + x;
+
+		if (t1 < t2)//if t1 < t2, we know the point of intersection t1 units down the ray is the closer point to the camera
+		{
+			if (t1 < tempT)//we now need to know if t1 is closer than the closest other known object to the camera
+			{
+				fragment.setT(t1);
+				return true;
+			}
+		}
+		else//else, we know the point of intersection t2 units down the ray is the closer point to the camera
+		{
+			if (t2 < tempT)//we now need to know if t2 is closer than the closest other known object to the camera
+			{
+				fragment.setT(t2);
+				return true;
+			}
+		}
+	}
+	fragment.setT(tempT);
+	return false;
+	
+	
+	/*
+	//More optimised way, idk how it works. Also isn't correct
 	float tempt = t;
-	 // Point of intersection p = pos + dir * t where t = distance along the ray
+
+
 	Vector rayOrigin = ray.GetOrigin();//pos
 	Vector rayDirection = ray.GetDirection();//dir
-	Vector oc = rayOrigin - mPosition;//I think the vector pointing to the impact point
+	Vector oc = rayOrigin - mPosition ;//I think the vector pointing to the impact point
 	float b = 2 * Maths::dot(oc, rayDirection); 
 	float c = Maths::dot(oc, oc ) - pow(mRadius, 2);
 	float discriminant = pow(b,2) - 4 * c;
@@ -40,9 +82,10 @@ bool Sphere::Intersects(Ray ray, float &t)
 		t = (t0 < t1) ? t0 : t1;//if t0 = t1 then the ray hit tangent to the sphere
 		if (t < tempt)
 		{
-			Vector normal =	this->GetNormal((rayOrigin + (rayDirection * t)/* intersect point*/));
-			Vector hitPoint = (rayOrigin + (rayDirection * t));
-			Vector reflectedVector = hitPoint - (normal * (2 * ((hitPoint.dot(normal))/(normal.dot(normal)))));
+			//Vector hitPoint = (rayOrigin + (rayDirection * t));//point of intersection on the sphere
+			//Vector normal =	this->GetNormal(hitPoint);//Normal at that point
+			//Vector reflectedVector = hitPoint - (normal * (2 * ((hitPoint.dot(normal))/(normal.dot(normal)))));
+
 
 		}
 			return true;
@@ -50,6 +93,8 @@ bool Sphere::Intersects(Ray ray, float &t)
 		t = tempt;
 		return false;
 	}
+	*/
+	
 }
 
 std::string Sphere::GetType()

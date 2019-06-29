@@ -20,7 +20,7 @@ public:
 	virtual void SetColour(Colour colour) override;
 	virtual inline void setSize(float rad) override;
 
-	virtual inline bool Intersects(Ray ray, float &t) override;
+	virtual inline bool Intersects(Fragment& fragment) override;
 	virtual Vector GetNormal(Vector point) override;
 
 

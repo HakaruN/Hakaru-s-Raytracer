@@ -66,6 +66,9 @@
     <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Matrix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Fragment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Colour.h">
@@ -123,6 +126,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Fragment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

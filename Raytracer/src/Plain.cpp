@@ -69,19 +69,19 @@ void Plain::setSize(float rad)
 
 }
 
-bool Plain::Intersects(Ray ray, float &t)
+bool Plain::Intersects(Fragment& fragment)
 {
-	float tempt = t;
+	float tempt = fragment.getT();
 	Vector normal = (mVertices[1] - mVertices[0]).cross(mVertices[2] - mVertices[0]);
-	float denom = normal.dot(ray.GetDirection());
+	float denom = normal.dot(fragment.getRay().GetDirection());
 	if (denom > 1e-6)
 	{
-		Vector planeMinusOrigin = mPosition - ray.GetOrigin();
-		t = planeMinusOrigin.dot(normal);
+		Vector planeMinusOrigin = mPosition - fragment.getRay().GetOrigin();
+		fragment.setT((planeMinusOrigin.dot(normal)));
 
-		if (t > tempt)
+		if (fragment.getT() > tempt)
 			return false;
-		return (t >= 0);
+		return (fragment.getT() >= 0);
 	}
 
 

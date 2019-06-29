@@ -76,25 +76,25 @@ Vector Triangle::GetNormal(Vector point)
 	return (mVertices[1] - mVertices[0]).cross(mVertices[2] - mVertices[0]);
 }
 
-bool Triangle::Intersects(Ray ray, float &t)
+bool Triangle::Intersects(Fragment& fragment)
 {
-	float tempt = t;
+	float tempt = fragment.getT();
 
 	Vector normalVec = Triangle::GetNormal(Vector(0, 0, 0));
-	Vector rayOrigin = ray.GetOrigin();
-	Vector rayDirection = ray.GetDirection();
+	Vector rayOrigin = fragment.getRay().GetOrigin();
+	Vector rayDirection = fragment.getRay().GetDirection();
 
 	//first need to calculate how far along the ray is the intersectionpoint of the plane
 	float d = normalVec.dot(mVertices[0]);
-	t = ((normalVec.dot(rayOrigin)) + d) / normalVec.dot(rayDirection);
+	fragment.setT( ((normalVec.dot(rayOrigin)) + d) / normalVec.dot(rayDirection));
 
 	
-	if (t < 0)
+	if (fragment.getT() < 0)
 		return false;//triangle is behind camera
 	
 
 	//compute intersection point using the ray formula
-	Vector p = rayOrigin + (rayDirection * t);
+	Vector p = rayOrigin + (rayDirection * fragment.getT());
 
 
 	//inside out test
@@ -103,7 +103,7 @@ bool Triangle::Intersects(Ray ray, float &t)
 	Vector c = edge0.cross(vp0);
 	if (normalVec.dot(c) < 0)
 	{
-		t = tempt;
+		fragment.setT(tempt);
 		return false;
 	}
 
@@ -112,7 +112,7 @@ bool Triangle::Intersects(Ray ray, float &t)
 	c = edge1.cross(vp1);
 	if (normalVec.dot(c) < 0)
 	{
-		t = tempt;
+		fragment.setT(tempt);
 		return false;
 	}
 
@@ -121,14 +121,14 @@ bool Triangle::Intersects(Ray ray, float &t)
 	c = edge3.cross(vp2);
 	if (normalVec.dot(c) < 0)
 	{
-		t = tempt;
+		fragment.setT(tempt);
 		return false;
 	}
 
-	if (t < tempt)
+	if (fragment.getT() < tempt)
 		return true;
 
-	t = tempt;
+	fragment.setT(tempt);
 	return false;
 
 

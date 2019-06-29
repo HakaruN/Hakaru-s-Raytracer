@@ -76,8 +76,8 @@ int main(void)
 #pragma region  window and framebuffer setup
 
 
-	const int width = 1920;
-	const int height = 1080;
+	const int width = 1600;
+	const int height = 800;
 
 	const int GUIWidth = 500;
 	const int GUIHeight = 500;
@@ -149,13 +149,13 @@ int main(void)
 
 	//Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-100, 0, 10),Vector(100, 0, 10),Vector(100, 0, 10));
 	
-	//renderables->push_back(blueTriangle);
+	renderables->push_back(blueTriangle);
 
 	//renderables->push_back(greenTriangle);
 
 	renderables->push_back(greenSphere);
 	//renderables->push_back(blueSphere);
-	//renderables->push_back(redSphere);
+	renderables->push_back(redSphere);
 	//renderables->push_back(whiteSphere);
 	//renderables->push_back(blackSphere);
 
