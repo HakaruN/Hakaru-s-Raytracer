@@ -17,7 +17,10 @@ class Sphere : public Renderable
 		
 		float GetRadius();
 		virtual std::string GetType() override;
-		virtual Vector GetNormal(Vector point) override;
+		virtual Vector GetNormal(Vector point) override
+		{
+			return (point - mPosition) / mRadius;
+		}
 		virtual Vector GetPos() override;
 		virtual Colour GetColour() override;
 		virtual float GetViewableArea(Vector toCamera) override;

@@ -13,6 +13,7 @@
 #include <thread>
 #include <vector>
 #include <string>
+#include <stdlib.h>
 
 #include "Colour.h"
 #include "Ray.h"
@@ -56,7 +57,7 @@ int main(void)
 	bool isCheckerboarding = true;
 	bool perspective = true;
 	bool freeCam = false;
-	bool multithreaded = true;
+	bool multithreaded = false;
 	bool show_demo_window = true;
 	bool show_another_window = false;
 	bool renderingDepthBuffer = false;
@@ -83,31 +84,6 @@ int main(void)
 
 	const int coloursPerPixel = 3;//number of colours per pixel
 	float* frameBuffer = new float[width * height * coloursPerPixel];
-#pragma endregion
-
-#pragma region openCL
-	/*
-	cl_platform_id platform_id = NULL;
-	cl_device_id device_id = NULL;
-
-	cl_uint ret_num_devices;
-	cl_uint ret_num_platforms;
-
-	cl_int ret = clGetPlatformIDs(1, &platform_id, &ret_num_platforms);
-	ret = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, 1, &device_id, &ret_num_devices);
-
-	std::cout << ret << std::endl;
-
-	//create an openCL context
-	cl_context context = clCreateContext(NULL, 1, &device_id, NULL, NULL, &ret);
-
-	//create a command queue
-	cl_command_queue command_queue = clCreateCommandQueueWithProperties(context, device_id, 0, &ret);
-
-	//makes a frame buffer on the device
-	cl_mem a_mem_obj = clCreateBuffer(context, CL_MEM_READ_WRITE,
-		width * height * coloursPerPixel * sizeof(float), NULL, &ret);
-		*/
 #pragma endregion
 
 #pragma region OpenGL window setup
@@ -151,31 +127,39 @@ int main(void)
 	renderables->reserve(renderablesCount);
 	cameras->reserve(cameraCount);
 
-	Sphere* greenSphere = new Sphere(Vector(1, 0.5, 35), green, 0.5);
+	Sphere* greenSphere = new Sphere(Vector(1, 0.5, 35), green, 2);
 	//Sphere* greenSphere = new Sphere(Vector(5, 0, 35), green, 5);
 	Sphere* blueSphere = new Sphere(Vector(+20, -15, 50), blue, 10);
 	Sphere* redSphere = new Sphere(Vector(+15, +15, 50), red, 1);
 	Sphere* whiteSphere = new Sphere(Vector(+15, -15, 50), white, 4);
 	Sphere* blackSphere = new Sphere(Vector(-15, 15, 50), black, 7);
 
+	//starts
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		Sphere* whiteStar = new Sphere(Vector(rand() % 100 - 50, rand() % 28 + 1, 50), white, 0.25);
+		//renderables->push_back(whiteStar);
+	}
+
 	Triangle* blueTriangle = new Triangle(Vector(0, 0, 40), blue,Vector(-2, -2, 1),Vector(2, -2, 1),Vector(0, 2, 1));
 	Triangle* greenTriangle = new Triangle(Vector(0, 15, 60), green, Vector(-4, -4, 1), Vector(4, -4, 1), Vector(0, 4, 1));
 
-	Plain* redPlain = new Plain(Vector(0,1.22,0), red, Vector(-2, -2, 1), Vector(2, -2, 1), Vector(2, 2, 100), Vector(-2, 2, 100));
+	Plain* redPlain = new Plain(Vector(0,1.22,55.12), red, Vector(-2, -2, 1), Vector(2, -2, 1), Vector(2, 2, 100), Vector(-2, 2, 100));
 
 
 	//Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-100, 0, 10),Vector(100, 0, 10),Vector(100, 0, 10));
 	
-	renderables->push_back(blueTriangle);
-	renderables->push_back(greenTriangle);
+	//renderables->push_back(blueTriangle);
+
+	//renderables->push_back(greenTriangle);
 
 	renderables->push_back(greenSphere);
-	renderables->push_back(blueSphere);
-	renderables->push_back(redSphere);
+	//renderables->push_back(blueSphere);
+	//renderables->push_back(redSphere);
 	//renderables->push_back(whiteSphere);
 	//renderables->push_back(blackSphere);
 
-	renderables->push_back(redPlain);
+	//renderables->push_back(redPlain);
 
 
 
@@ -196,7 +180,6 @@ int main(void)
 	Vector camLook(0, 0, 100);
 	Vector cameraPosition(0, 0, 0);
 
-
 	Sphere light(Vector(width, height , 50), white, 40);
 	bool guiOpen = true;
 
@@ -210,12 +193,11 @@ int main(void)
 	static float lightVerti, lightHoriz = 0.25;
 	static float distance = (renderables->at(guiObjectIndex)->GetPos() - cameraPosition).getMagnitude();
 	float fov = 30;
-	float t = 0; 
 
 
-	Camera* camera = new Camera(cameraPosition, renderables->at(guiObjectIndex)->GetPos(), Vector(0, 1, 0), Maths::degToRad(fov), width / height);
+	Camera* camera = new Camera(cameraPosition, renderables->at(guiObjectIndex)->GetPos(), Vector(0, 1, 0), fov, width / height);
 	//cameraPosition.SetX(0.0f); cameraPosition.SetY(0.0f); cameraPosition.SetZ(0.0f);
-	Camera* secondaryCamera = new Camera(cameraPosition, camLook, Vector(0, 1, 0), Maths::degToRad(fov), width/height);
+	Camera* secondaryCamera = new Camera(cameraPosition, camLook, Vector(0, 1, 0), fov, width/height);
 
 	cameras->push_back(camera); cameras->push_back(secondaryCamera);
 
@@ -247,7 +229,6 @@ int main(void)
 		float tempFov = fov;
 		light.SetPos(Vector(width * lightHoriz, height * lightVerti, 50));
 		renderables->at(guiObjectIndex)->setSize(guiSize);
-
 
 
 		glfwMakeContextCurrent(window);
@@ -408,9 +389,6 @@ int main(void)
 	}
 
 
-
-
-
 #pragma region cleanup
 
 	ImGui_ImplOpenGL3_Shutdown();
@@ -423,7 +401,6 @@ int main(void)
 
 
 	delete[] frameBuffer;
-
 
 	delete renderables;
 	delete cameras;
@@ -442,8 +419,6 @@ int main(void)
 	delete camera;
 	delete secondaryCamera;
 #pragma endregion
-
-
 
 	return 0;
 }

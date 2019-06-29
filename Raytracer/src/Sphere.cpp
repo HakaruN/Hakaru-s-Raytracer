@@ -21,13 +21,13 @@ Sphere::Sphere()
 
 bool Sphere::Intersects(Ray ray, float &t)
 {
-	float tempt = t;
 
-	 // Point intersection p = pos + dir * t where t = distance along the ray
+	float tempt = t;
+	 // Point of intersection p = pos + dir * t where t = distance along the ray
 	Vector rayOrigin = ray.GetOrigin();//pos
 	Vector rayDirection = ray.GetDirection();//dir
-	Vector oc = rayOrigin - mPosition;
-	float b = 2 * Maths::dot(oc, rayDirection);
+	Vector oc = rayOrigin - mPosition;//I think the vector pointing to the impact point
+	float b = 2 * Maths::dot(oc, rayDirection); 
 	float c = Maths::dot(oc, oc ) - pow(mRadius, 2);
 	float discriminant = pow(b,2) - 4 * c;
 	if (discriminant < 0) return false; //if the discriminant > 0, the quadratic equation has 2 roots
@@ -39,6 +39,12 @@ bool Sphere::Intersects(Ray ray, float &t)
 
 		t = (t0 < t1) ? t0 : t1;//if t0 = t1 then the ray hit tangent to the sphere
 		if (t < tempt)
+		{
+			Vector normal =	this->GetNormal((rayOrigin + (rayDirection * t)/* intersect point*/));
+			Vector hitPoint = (rayOrigin + (rayDirection * t));
+			Vector reflectedVector = hitPoint - (normal * (2 * ((hitPoint.dot(normal))/(normal.dot(normal)))));
+
+		}
 			return true;
 
 		t = tempt;
@@ -55,10 +61,7 @@ float Sphere::GetRadius()
 {
 	return mRadius;
 }
-Vector Sphere::GetNormal(Vector point)
-{
-	return (point - mPosition) / mRadius;
-}
+
 Vector Sphere::GetPos()
 {
 	return mPosition;

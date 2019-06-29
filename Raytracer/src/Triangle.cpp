@@ -18,11 +18,6 @@ Triangle::Triangle(Vector position, Colour colour, Vector vert1, Vector vert2, V
 	mVertices[1] = position + vert2;
 	mVertices[2] = position + vert3;
 	mColour = colour;
-	
-
-	//maxDist = calcMaxDist();
-	//Colour darkWhite(128, 128, 128);
-	//Sphere mHitSphere(mPosition, darkWhite, maxDist);
 }
 
 std::string Triangle::GetType()
@@ -44,18 +39,10 @@ float Triangle::getSize()
 
 void Triangle::SetPos(Vector pos)
 {
-
 	mPosition = pos;
 	mVertices[0] = mPosition + mOrigVertices[0];
 	mVertices[1] = mPosition + mOrigVertices[1];
 	mVertices[2] = mPosition + mOrigVertices[2];
-
-	/* hit detection based on a sphere-ray hit
-	maxDist = calcMaxDist();
-	Colour darkWhite(128, 128, 128);
-	Sphere mHitSphere(mPosition, darkWhite, maxDist);
-	*/
-
 }
 
 
@@ -143,6 +130,8 @@ bool Triangle::Intersects(Ray ray, float &t)
 
 	t = tempt;
 	return false;
+
+
 }
 
 float Triangle::GetViewableArea(Vector toCamera) {
