@@ -46,7 +46,7 @@ void Triangle::SetPos(Vector pos)
 }
 
 
-float Triangle::calcMaxDist()
+double Triangle::calcMaxDist()
 {
 	if (Vector::distanceBetweenVectors(mVertices[0], mPosition) > maxDist)
 	{

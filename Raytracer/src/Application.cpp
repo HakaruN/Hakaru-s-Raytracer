@@ -76,8 +76,8 @@ int main(void)
 #pragma region  window and framebuffer setup
 
 
-	const int width = 1600;
-	const int height = 800;
+	const int width = 1920;
+	const int height = 1080;
 
 	const int GUIWidth = 500;
 	const int GUIHeight = 500;
@@ -138,7 +138,6 @@ int main(void)
 	for (unsigned int i = 0; i < 6; i++)
 	{
 		Sphere* whiteStar = new Sphere(Vector(rand() % 100 - 50, rand() % 28 + 1, 50), white, 0.25);
-		//renderables->push_back(whiteStar);
 	}
 
 	Triangle* blueTriangle = new Triangle(Vector(0, 0, 40), blue,Vector(-2, -2, 1),Vector(2, -2, 1),Vector(0, 2, 1));
@@ -149,17 +148,17 @@ int main(void)
 
 	//Triangle* blueTriangle = new Triangle(Vector(width / 2, height / 2, 50),blue,Vector(-100, 0, 10),Vector(100, 0, 10),Vector(100, 0, 10));
 	
-	renderables->push_back(blueTriangle);
+	//renderables->push_back(blueTriangle);
 
-	//renderables->push_back(greenTriangle);
+	renderables->push_back(greenTriangle);
 
-	renderables->push_back(greenSphere);
-	//renderables->push_back(blueSphere);
-	renderables->push_back(redSphere);
+	//renderables->push_back(greenSphere);
+	renderables->push_back(blueSphere);
+	//renderables->push_back(redSphere);
 	//renderables->push_back(whiteSphere);
 	//renderables->push_back(blackSphere);
 
-	//renderables->push_back(redPlain);
+	renderables->push_back(redPlain);
 
 
 

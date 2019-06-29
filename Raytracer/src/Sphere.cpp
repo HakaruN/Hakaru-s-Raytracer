@@ -45,6 +45,11 @@ bool Sphere::Intersects(Fragment& fragment)
 			if (t1 < tempT)//we now need to know if t1 is closer than the closest other known object to the camera
 			{
 				fragment.setT(t1);
+
+				Vector hitPoint = (rayOrigin + (rayDirection * t1));//point of intersection on the sphere
+				Vector normal =	this->GetNormal(hitPoint);//Normal at that point
+				Vector reflectedVector = hitPoint - (normal * (2 * ((hitPoint.dot(normal))/(normal.dot(normal)))));
+
 				return true;
 			}
 		}
@@ -53,10 +58,17 @@ bool Sphere::Intersects(Fragment& fragment)
 			if (t2 < tempT)//we now need to know if t2 is closer than the closest other known object to the camera
 			{
 				fragment.setT(t2);
+
+				Vector hitPoint = (rayOrigin + (rayDirection * t1));//point of intersection on the sphere
+				Vector normal = this->GetNormal(hitPoint);//Normal at that point
+				Vector reflectedVector = hitPoint - (normal * (2 * ((hitPoint.dot(normal)) / (normal.dot(normal)))));
+
+
 				return true;
 			}
 		}
 	}
+
 	fragment.setT(tempT);
 	return false;
 	

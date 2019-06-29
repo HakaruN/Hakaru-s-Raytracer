@@ -52,7 +52,7 @@ class Vector
 				mZ / magnitude
 			));
 		}
-		inline float getMagnitude()
+		inline double getMagnitude()
 		{
 			return(sqrt(
 				(mX * mX) +
@@ -60,7 +60,7 @@ class Vector
 				(mZ * mZ)
 			));
 		}
-		inline static float distanceBetweenVectors(Vector a, Vector b)
+		inline static double distanceBetweenVectors(Vector a, Vector b)
 		{
 			return(
 				sqrt(pow(a.GetX() - b.GetX(),2))

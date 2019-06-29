@@ -12,7 +12,7 @@ public:
 	inline Vector static Normalise(Vector a) { return Vector(sqrt(pow(a.GetX(), 2)), sqrt(pow(a.GetY(), 2)), sqrt(pow(a.GetZ(), 2))); }
 
 	inline float static GetMagnitude(Vector a) { return sqrt((pow(a.GetX(), 2)) + (pow(a.GetY(), 2)) + (pow(a.GetZ(), 2))); }
-	inline float static degToRad(double degrees) { return(degrees * (3.1415 / 180)); }//radians = degrees  * pi / 180
-	inline float static radToDeg(double radians){return(radians * (180 / 3.1415));}//radians = degrees  * 180 / pi
+	inline double static degToRad(double degrees) { return(degrees * (3.1415 / 180)); }//radians = degrees  * pi / 180
+	inline double static radToDeg(double radians){return(radians * (180 / 3.1415));}//radians = degrees  * 180 / pi
 	private:
 };

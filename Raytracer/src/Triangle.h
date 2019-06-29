@@ -22,7 +22,7 @@ class Triangle : public Renderable
 		virtual inline bool Intersects(Fragment& fragment) override;
 		virtual inline Vector GetNormal(Vector point) override;
 
-		float inline calcMaxDist();
+		double inline calcMaxDist();
 
 
 	private:
@@ -32,5 +32,5 @@ class Triangle : public Renderable
 		Vector mVertices[3];
 		Vector mPosition;
 		Sphere mHitSphere;
-		float maxDist;
+		double maxDist;
 };
