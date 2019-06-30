@@ -2,6 +2,7 @@
 #include "Ray.h"
 #include "Vector.h"
 #include "Maths.h"
+#include "Colour.h"
 
 
 class Fragment
@@ -11,8 +12,12 @@ public:
 
 	float getT();
 	Ray& getRay();
+	Colour getColour();
+	bool getShadow();
 
 	void setT(float t);
+	void setColour(Colour colour);
+	void setShadow(bool shadowed);
 
 
 private:
@@ -20,4 +25,7 @@ private:
 	Ray& mray;
 	float& mt;
 
+	bool mIsShadowed;
+
+	Colour mColour;
 };

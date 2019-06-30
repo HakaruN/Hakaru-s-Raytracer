@@ -3,7 +3,7 @@
 class Ray
 {
 	public:
-		Ray(Vector i, Vector j);
+		Ray(Vector origin, Vector direction);
 		Vector GetOrigin();
 		Vector GetDirection();
 

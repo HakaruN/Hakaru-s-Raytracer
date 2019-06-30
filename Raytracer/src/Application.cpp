@@ -32,7 +32,7 @@
 #include "vendor\imgui\imgui_impl_opengl3.h"
 
 //prototyping the render function
-void render(int width, int height, int coloursPerPixel, double fov, float* frameBuffer, bool renderingDepthBuffer, Colour& background, Sphere light, std::vector<Renderable*>* renderables, std::vector<Camera*>* cameras, int cameraIndex , float guiVerti, float guiHoriz, float guiDist, int guiObjectIndex, bool isCheckerboarding, bool perspective, bool multithreaded);
+void render(int width, int height, int coloursPerPixel, double fov, float* frameBuffer, bool renderingDepthBuffer, Colour& background, Light light, std::vector<Renderable*>* renderables, std::vector<Camera*>* cameras, int cameraIndex , float guiVerti, float guiHoriz, float guiDist, int guiObjectIndex, bool isCheckerboarding, bool perspective, bool multithreaded);
 
 Colour white(255, 255, 255);
 Colour darkWhite(128, 128, 128);
@@ -56,8 +56,8 @@ int main(void)
 
 	bool isCheckerboarding = true;
 	bool perspective = true;
-	bool freeCam = false;
-	bool multithreaded = false;
+	bool freeCam = true;
+	bool multithreaded = true;
 	bool show_demo_window = true;
 	bool show_another_window = false;
 	bool renderingDepthBuffer = false;
@@ -150,15 +150,15 @@ int main(void)
 	
 	//renderables->push_back(blueTriangle);
 
-	renderables->push_back(greenTriangle);
+	//renderables->push_back(greenTriangle);
 
-	//renderables->push_back(greenSphere);
+	renderables->push_back(greenSphere);
 	renderables->push_back(blueSphere);
-	//renderables->push_back(redSphere);
+	renderables->push_back(redSphere);
 	//renderables->push_back(whiteSphere);
 	//renderables->push_back(blackSphere);
 
-	renderables->push_back(redPlain);
+	//renderables->push_back(redPlain);
 
 
 
@@ -179,7 +179,7 @@ int main(void)
 	Vector camLook(0, 0, 100);
 	Vector cameraPosition(0, 0, 0);
 
-	Sphere light(Vector(width, height , 50), white, 40);
+	Light light(Vector(width, height , 50), white);
 	bool guiOpen = true;
 
 	static int guiObjectIndex = 0;
@@ -189,7 +189,7 @@ int main(void)
 	static float guiVerti = 0.0f;
 	static float guiHoriz = 0.0f;
 	static float guiSize = renderables->at(guiObjectIndex)->getSize();
-	static float lightVerti, lightHoriz = 0.25;
+	static float lightVerti, lightHoriz, lightDepth = 0.25;
 	static float distance = (renderables->at(guiObjectIndex)->GetPos() - cameraPosition).getMagnitude();
 	float fov = 30;
 
@@ -226,7 +226,7 @@ int main(void)
 	while (!glfwWindowShouldClose(window) || !glfwWindowShouldClose(GUIWindow))
 	{
 		float tempFov = fov;
-		light.SetPos(Vector(width * lightHoriz, height * lightVerti, 50));
+		light.setPosition(Vector(lightHoriz, lightVerti, lightDepth));
 		renderables->at(guiObjectIndex)->setSize(guiSize);
 
 
@@ -354,8 +354,9 @@ int main(void)
 		///light controls
 		{
 			ImGui::Begin("Light controls");
-			ImGui::SliderFloat("Light V", &lightVerti, -1.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
-			ImGui::SliderFloat("Light H", &lightHoriz, -1.0f, 1.0f);
+			ImGui::SliderFloat("Light X", &lightHoriz, -80.0f, 80.0f);
+			ImGui::SliderFloat("Light Y", &lightVerti, -80.0f, 80.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
+			ImGui::SliderFloat("Light Z", &lightDepth, -80.0f, 80.0f);
 			ImGui::End();
 		}
 
@@ -422,7 +423,7 @@ int main(void)
 	return 0;
 }
 
-void render(int width, int height, int coloursPerPixel, double fov, float* frameBuffer, bool renderingDepthBuffer, Colour& background, Sphere light, std::vector<Renderable*>* renderables, std::vector<Camera*>* cameras, int cameraIndex, float guiVerti, float guiHoriz, float guiDist, int guiObjectIndex, bool isCheckerboarding, bool perspective, bool multithreaded)
+void render(int width, int height, int coloursPerPixel, double fov, float* frameBuffer, bool renderingDepthBuffer, Colour& background, Light light, std::vector<Renderable*>* renderables, std::vector<Camera*>* cameras, int cameraIndex, float guiVerti, float guiHoriz, float guiDist, int guiObjectIndex, bool isCheckerboarding, bool perspective, bool multithreaded)
 {
 	renderables->at(guiObjectIndex)->SetPos(Vector(guiHoriz, guiVerti, guiDist));
 	std::chrono::steady_clock::time_point start(std::chrono::steady_clock::now());

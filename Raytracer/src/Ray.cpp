@@ -2,9 +2,9 @@
 //#include "stdafx.h"
 #include"Ray.h"
 #include"Vector.h"
-Ray::Ray(Vector i, Vector j)
+Ray::Ray(Vector origin, Vector direction)
 {
-	mOrigin = i; mDirection = j;
+	mOrigin = origin; mDirection = direction;
 }
 
 Vector Ray::GetOrigin()

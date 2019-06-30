@@ -2,11 +2,15 @@
 #include "Vector.h"
 #include "Colour.h"
 #include "Fragment.h"
+
+#include <vector>///std vector
 #include <string>
+#include "Light.h"
+
 class Renderable//abstract class for the renderable objects to inherit from
 {
 	public:
-		virtual bool Intersects(Fragment& fragment) = 0;
+		virtual bool Intersects(Fragment& fragment, std::vector<Renderable*>* renderables, Light& lighting) = 0;
 		virtual void SetPos(Vector pos) = 0;
 		virtual void SetColour(Colour colour) = 0;
 

@@ -19,7 +19,7 @@ Sphere::Sphere()
 }
 
 
-bool Sphere::Intersects(Fragment& fragment)
+bool Sphere::Intersects(Fragment& fragment, std::vector<Renderable*>* renderables, Light& lighting)
 {
 	
 	// https://www.youtube.com/watch?v=HFPlKQGChpE //how to do the intersection	
@@ -45,10 +45,48 @@ bool Sphere::Intersects(Fragment& fragment)
 			if (t1 < tempT)//we now need to know if t1 is closer than the closest other known object to the camera
 			{
 				fragment.setT(t1);
-
+				
 				Vector hitPoint = (rayOrigin + (rayDirection * t1));//point of intersection on the sphere
-				Vector normal =	this->GetNormal(hitPoint);//Normal at that point
+
+				Vector normal = this->GetNormal(hitPoint).Normalise();//Normal at that point
 				Vector reflectedVector = hitPoint - (normal * (2 * ((hitPoint.dot(normal))/(normal.dot(normal)))));
+
+				Vector PointToLight = (Vector::vectorBetweenVectors(lighting.getPosition(), hitPoint)).Normalise();
+
+				Ray shadowRay(hitPoint, reflectedVector);//ray from the object to the light source
+				float shadowT = 999999999;				
+				Fragment shadowFragment(0,0, shadowRay, shadowT);//makes a fragment for the shadow ray
+
+				for (unsigned short rendOjb = 0; rendOjb < renderables->size(); rendOjb++)//for every possible renderable object
+				{
+					//check for objects in the way of the light
+					if (renderables->at(rendOjb)->Intersects(shadowFragment, renderables, lighting))//if the shadow ray intersects with another object, lets pretend our object is in shadow
+					{
+						fragment.setShadow(true);
+					}
+					else
+						fragment.setShadow(false);
+
+				}
+				
+
+				/*
+
+				Ray ray(hitPoint, reflectedVector);
+				
+				for (unsigned short rendOjb = 0; rendOjb < renderables->size(); rendOjb++)
+				{
+					if (renderables->at(rendOjb)->Intersects(fragment, renderables), renderables)
+					{
+						fragment.setColour(Colour(
+							renderables->at(rendOjb)->GetColour().GetRed(),
+							renderables->at(rendOjb)->GetColour().GetGreen(),
+							renderables->at(rendOjb)->GetColour().GetBlue()
+						));
+					}
+				}
+				
+				*/
 
 				return true;
 			}
@@ -59,11 +97,30 @@ bool Sphere::Intersects(Fragment& fragment)
 			{
 				fragment.setT(t2);
 
-				Vector hitPoint = (rayOrigin + (rayDirection * t1));//point of intersection on the sphere
-				Vector normal = this->GetNormal(hitPoint);//Normal at that point
+				Vector hitPoint = (rayOrigin + (rayDirection * t2));//point of intersection on the sphere
+
+				Vector normal = this->GetNormal(hitPoint).Normalise();//Normal at that point
 				Vector reflectedVector = hitPoint - (normal * (2 * ((hitPoint.dot(normal)) / (normal.dot(normal)))));
 
+				Vector PointToLight = (Vector::vectorBetweenVectors(lighting.getPosition(), hitPoint)).Normalise();
 
+				Ray shadowRay(hitPoint, reflectedVector);
+				float shadowT = 999999999;
+				Fragment shadowFragment(0, 0, shadowRay, shadowT);
+
+				for (unsigned short rendOjb = 0; rendOjb < renderables->size(); rendOjb++)
+				{
+					//check for objects in the way of the light
+					if (renderables->at(rendOjb)->Intersects(shadowFragment, renderables, lighting))
+					{
+						fragment.setShadow(true);
+						//std::cout <<  " is in shadow" << std::endl;
+						//fragment.setColour(Colour(0, 0, 0));
+					}
+					else
+						fragment.setShadow(false);
+
+				}
 				return true;
 			}
 		}
@@ -123,6 +180,7 @@ Vector Sphere::GetPos()
 {
 	return mPosition;
 }
+
 Colour Sphere::GetColour()
 {
 	return mColour;

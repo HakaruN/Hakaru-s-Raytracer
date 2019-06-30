@@ -3,6 +3,7 @@
 #include "Ray.h"
 #include "Colour.h"
 #include "Renderable.h"
+#include "Sphere.h"
 class Sphere : public Renderable
 {
 	public:
@@ -10,7 +11,7 @@ class Sphere : public Renderable
 		Sphere();
 
 
-		virtual inline bool Intersects(Fragment& fragment) override;
+		virtual inline bool Intersects(Fragment& fragment, std::vector<Renderable*>* renderables, Light& lighting) override;
 		virtual inline void setSize(float rad) override;
 
 		virtual float getSize() override;

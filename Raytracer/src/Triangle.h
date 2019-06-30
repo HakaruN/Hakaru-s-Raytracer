@@ -19,7 +19,7 @@ class Triangle : public Renderable
 		virtual void SetColour(Colour colour) override;
 		virtual inline void setSize(float rad) override;
 
-		virtual inline bool Intersects(Fragment& fragment) override;
+		virtual inline bool Intersects(Fragment& fragment, std::vector<Renderable*>* renderables, Light& lighting) override;
 		virtual inline Vector GetNormal(Vector point) override;
 
 		double inline calcMaxDist();

@@ -3,6 +3,7 @@
 #include "Vector.h"
 #include "Maths.h"
 
+
 Plain::Plain(Vector position, Colour colour, Vector vert1, Vector vert2, Vector vert3, Vector vert4)
 {
 	mType = "Plain";
@@ -69,7 +70,7 @@ void Plain::setSize(float rad)
 
 }
 
-bool Plain::Intersects(Fragment& fragment)
+bool Plain::Intersects(Fragment& fragment, std::vector<Renderable*>* renderables, Light& lighting)
 {
 	float tempt = fragment.getT();
 	Vector normal = (mVertices[1] - mVertices[0]).cross(mVertices[2] - mVertices[0]);

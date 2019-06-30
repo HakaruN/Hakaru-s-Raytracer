@@ -3,6 +3,7 @@
 #include "Ray.h"
 #include "Colour.h"
 #include "Renderable.h"
+#include "Sphere.h"
 
 class Plain : public Renderable
 {
@@ -20,7 +21,7 @@ public:
 	virtual void SetColour(Colour colour) override;
 	virtual inline void setSize(float rad) override;
 
-	virtual inline bool Intersects(Fragment& fragment) override;
+	virtual inline bool Intersects(Fragment& fragment, std::vector<Renderable*>* renderables, Light& lighting) override;
 	virtual Vector GetNormal(Vector point) override;
 
 

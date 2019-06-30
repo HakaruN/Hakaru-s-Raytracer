@@ -76,7 +76,7 @@ Vector Triangle::GetNormal(Vector point)
 	return (mVertices[1] - mVertices[0]).cross(mVertices[2] - mVertices[0]);
 }
 
-bool Triangle::Intersects(Fragment& fragment)
+bool Triangle::Intersects(Fragment& fragment, std::vector<Renderable*>* renderables, Light& lighting)
 {
 	float tempt = fragment.getT();
 
