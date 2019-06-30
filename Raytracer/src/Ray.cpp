@@ -1,7 +1,7 @@
 #pragma once
 //#include "stdafx.h"
 #include"Ray.h"
-#include"Vector.h"
+#include"Maths\Vector.h"
 Ray::Ray(Vector origin, Vector direction)
 {
 	mOrigin = origin; mDirection = direction;

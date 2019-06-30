@@ -17,12 +17,12 @@
 
 #include "Colour.h"
 #include "Ray.h"
-#include "Maths.h"
+#include "Maths\Maths.h"
 #include "RayTracer.h"
 
-#include "Sphere.h"
-#include "Triangle.h"
-#include "Plain.h"
+#include "Geometry\Sphere.h"
+#include "Geometry\Triangle.h"
+#include "Geometry\Plain.h"
 
 #include "Renderable.h"
 #include "Camera.h"
@@ -189,7 +189,7 @@ int main(void)
 	static float guiVerti = 0.0f;
 	static float guiHoriz = 0.0f;
 	static float guiSize = renderables->at(guiObjectIndex)->getSize();
-	static float lightVerti, lightHoriz, lightDepth = 0.25;
+	static float lightVerti, lightHoriz = 0; static float lightDepth = 50;
 	static float distance = (renderables->at(guiObjectIndex)->GetPos() - cameraPosition).getMagnitude();
 	float fov = 30;
 

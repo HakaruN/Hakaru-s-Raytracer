@@ -1,7 +1,7 @@
 #include <math.h>
-#include "Maths.h"
+#include "Maths\Maths.h"
 #include "Camera.h"
-#include "Vector.h"
+#include "Maths\Vector.h"
 
 Camera::Camera(Vector origin, Vector target, Vector upGuide, double fov, double aspectRatio)
 {

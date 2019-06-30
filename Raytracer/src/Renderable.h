@@ -1,5 +1,5 @@
 #pragma once
-#include "Vector.h"
+#include "Maths\Vector.h"
 #include "Colour.h"
 #include "Fragment.h"
 

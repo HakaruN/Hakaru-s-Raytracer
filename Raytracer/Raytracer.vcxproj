@@ -158,9 +158,9 @@
     <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Camera.cpp" />
     <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Fragment.cpp" />
     <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Light.cpp" />
-    <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Matrix.cpp" />
-    <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Plain.cpp" />
-    <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Triangle.cpp" />
+    <ClCompile Include="src\Maths\Matrix.cpp" />
+    <ClCompile Include="src\Geometry\Plain.cpp" />
+    <ClCompile Include="src\Geometry\Triangle.cpp" />
     <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui.cpp" />
     <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui_demo.cpp" />
     <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui_draw.cpp" />
@@ -169,20 +169,20 @@
     <ClCompile Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Colour.cpp" />
-    <ClCompile Include="src\Maths.cpp" />
+    <ClCompile Include="src\Maths\Maths.cpp" />
     <ClCompile Include="src\Ray.cpp" />
     <ClCompile Include="src\RayTracer.cpp" />
-    <ClCompile Include="src\Sphere.cpp" />
-    <ClCompile Include="src\Vector.cpp" />
+    <ClCompile Include="src\Geometry\Sphere.cpp" />
+    <ClCompile Include="src\Maths\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Camera.h" />
     <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Fragment.h" />
     <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Light.h" />
-    <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Matrix.h" />
-    <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Plain.h" />
+    <ClInclude Include="src\Maths\Matrix.h" />
+    <ClInclude Include="src\Geometry\Plain.h" />
     <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Renderable.h" />
-    <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\Triangle.h" />
+    <ClInclude Include="src\Geometry\Triangle.h" />
     <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imconfig.h" />
     <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui.h" />
     <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imgui_impl_glfw.h" />
@@ -192,11 +192,11 @@
     <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="..\..\Hakaru%27sRaytracer\Raytracer\src\vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="src\Colour.h" />
-    <ClInclude Include="src\Maths.h" />
+    <ClInclude Include="src\Maths\Maths.h" />
     <ClInclude Include="src\Ray.h" />
     <ClInclude Include="src\RayTracer.h" />
-    <ClInclude Include="src\Sphere.h" />
-    <ClInclude Include="src\Vector.h" />
+    <ClInclude Include="src\Geometry\Sphere.h" />
+    <ClInclude Include="src\Maths\Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Hakaru%27sRaytracer\Raytracer\imgui.ini" />

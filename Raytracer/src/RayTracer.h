@@ -7,9 +7,9 @@
 #include <vector>
 #include "Colour.h"
 #include "Ray.h"
-#include "Sphere.h"
-#include "Maths.h"
-#include "Triangle.h"
+#include "Geometry\Sphere.h"
+#include "Maths\Maths.h"
+#include "Geometry\Triangle.h"
 #include "Renderable.h"
 #include "Camera.h"
 
